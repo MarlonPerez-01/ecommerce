@@ -1,4 +1,11 @@
-import { Column, DeleteDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Producto } from 'src/productos/entities/producto.entity';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Marca {
@@ -10,6 +17,9 @@ export class Marca {
 
   @Column({ unique: true })
   imagen: string;
+
+  @OneToMany(() => Producto, (producto) => producto.marca)
+  productos: Producto[];
 
   @DeleteDateColumn({ select: false })
   deletedAt: Date;
