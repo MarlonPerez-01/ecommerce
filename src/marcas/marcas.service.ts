@@ -1,10 +1,10 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateMarcaDto } from './dto/create-marca.dto';
 import { UpdateMarcaDto } from './dto/update-marca.dto';
-import { Repository } from 'typeorm';
-import { Marca } from './entities/marca.entity';
-import { InjectRepository } from '@nestjs/typeorm';
 import { FindMarcasDto } from './dto/find-marcas.dto';
+import { Marca } from './entities/marca.entity';
 import { paginate } from '../common/helpers/paginate';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class MarcasService {
   async create(createMarcaDto: CreateMarcaDto) {
     const marca = await this.marcasRepository.create(createMarcaDto);
 
-    const existe = await this.existsByNombre(createMarcaDto.nombre);
+    const existe = await this.getByNombre(createMarcaDto.nombre);
     if (existe) throw new ConflictException();
 
     return this.marcasRepository.save(marca);
@@ -49,8 +49,13 @@ export class MarcasService {
   }
 
   async update(id: number, updateMarcaDto: UpdateMarcaDto) {
-    const marca = await this.findOne(id);
-    return this.marcasRepository.update(id, { ...marca, ...updateMarcaDto });
+    const marca = await this.marcasRepository.preload({
+      id, ...updateMarcaDto,
+    });
+
+    if (!marca) throw new NotFoundException();
+
+    return this.marcasRepository.save(marca);
   }
 
   async remove(id: number) {
@@ -58,7 +63,7 @@ export class MarcasService {
     return this.marcasRepository.softDelete(marca);
   }
 
-  async existsByNombre(nombre: string) {
+  async getByNombre(nombre: string) {
     return this.marcasRepository.findOneBy({ nombre });
   }
 }
