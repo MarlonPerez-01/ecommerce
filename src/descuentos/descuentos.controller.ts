@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { DescuentosService } from './descuentos.service';
 import { CreateDescuentoDto } from './dto/create-descuento.dto';
 import { UpdateDescuentoDto } from './dto/update-descuento.dto';
@@ -18,17 +26,20 @@ export class DescuentosController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.descuentosService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.descuentosService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDescuentoDto: UpdateDescuentoDto) {
-    return this.descuentosService.update(+id, updateDescuentoDto);
+  update(
+    @Param('id') id: number,
+    @Body() updateDescuentoDto: UpdateDescuentoDto,
+  ) {
+    return this.descuentosService.update(id, updateDescuentoDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.descuentosService.remove(+id);
+  remove(@Param('id') id: number) {
+    return this.descuentosService.remove(id);
   }
 }
