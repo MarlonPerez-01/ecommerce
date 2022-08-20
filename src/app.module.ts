@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { MarcasModule } from './marcas/marcas.module';
 import { CategoriasModule } from './categorias/categorias.module';
 import { ProductosModule } from './productos/productos.module';
+import { DescuentosModule } from './descuentos/descuentos.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { ProductosModule } from './productos/productos.module';
     MarcasModule,
     CategoriasModule,
     ProductosModule,
+    DescuentosModule,
   ],
   controllers: [AppController],
   providers: [AppService],
