@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import * as Joi from 'joi';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MarcasModule } from './marcas/marcas.module';
-import * as Joi from 'joi';
+import { CategoriasModule } from './categorias/categorias.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import * as Joi from 'joi';
       synchronize: process.env.NODE_ENV === 'development',
     }),
     MarcasModule,
+    CategoriasModule,
   ],
   controllers: [AppController],
   providers: [AppService],
