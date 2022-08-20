@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { MarcasModule } from './marcas/marcas.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -30,10 +31,10 @@ import * as Joi from 'joi';
       autoLoadEntities: true,
       synchronize: process.env.NODE_ENV === 'development',
     }),
+    MarcasModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-
 export class AppModule {
 }
