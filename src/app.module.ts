@@ -11,6 +11,7 @@ import { DescuentosModule } from './descuentos/descuentos.module';
 import { ClientesModule } from './clientes/clientes.module';
 import { ProveedoresModule } from './proveedores/proveedores.module';
 import { DepartamentosModule } from './departamentos/departamentos.module';
+import { MunicipiosModule } from './municipios/municipios.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { DepartamentosModule } from './departamentos/departamentos.module';
     ClientesModule,
     ProveedoresModule,
     DepartamentosModule,
+    MunicipiosModule,
   ],
   controllers: [AppController],
   providers: [AppService],
