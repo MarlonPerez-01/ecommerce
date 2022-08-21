@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { paginate } from 'src/common/helpers/paginate';
 import { Repository } from 'typeorm';
@@ -43,7 +40,11 @@ export class ProductosService {
   }
 
   async findOne(id: number) {
-    const producto = await this.productoRepository.findOneBy({ id });
+    const producto = await this.productoRepository.findOne({
+      where: { id },
+      relations: ['marca', 'categoria', 'descuento'],
+    });
+
     if (!producto) throw new NotFoundException();
     return producto;
   }

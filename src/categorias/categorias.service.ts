@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateCategoriaDto } from './dto/create-categoria.dto';
 import { UpdateCategoriaDto } from './dto/update-categoria.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,8 +16,7 @@ export class CategoriasService {
   constructor(
     @InjectRepository(Categoria)
     private readonly categoriaRepository: Repository<Categoria>,
-  ) {
-  }
+  ) {}
 
   async create(createCategoriaDto: CreateCategoriaDto) {
     const categoria = await this.categoriaRepository.create(createCategoriaDto);
@@ -28,10 +31,11 @@ export class CategoriasService {
   async findAll(findCategoriasDto: FindCategoriasDto) {
     const { page, limit, sort, order } = findCategoriasDto;
 
-    const skip = ((page - 1) * limit);
+    const skip = (page - 1) * limit;
 
     const [data, totalItems] = await this.categoriaRepository.findAndCount({
-      take: limit, skip,
+      take: limit,
+      skip,
       order: { [sort]: order },
     });
 
@@ -52,7 +56,8 @@ export class CategoriasService {
 
   async update(id: number, updateCategoriaDto: UpdateCategoriaDto) {
     const marca = await this.categoriaRepository.preload({
-      id, ...updateCategoriaDto,
+      id,
+      ...updateCategoriaDto,
     });
 
     if (!marca) throw new NotFoundException();

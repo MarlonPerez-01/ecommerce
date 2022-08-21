@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { MarcasService } from './marcas.service';
 import { CreateMarcaDto } from './dto/create-marca.dto';
 import { UpdateMarcaDto } from './dto/update-marca.dto';
@@ -6,8 +15,7 @@ import { FindMarcasDto } from './dto/find-marcas.dto';
 
 @Controller('marcas')
 export class MarcasController {
-  constructor(private readonly marcasService: MarcasService) {
-  }
+  constructor(private readonly marcasService: MarcasService) {}
 
   @Post()
   create(@Body() createMarcaDto: CreateMarcaDto) {

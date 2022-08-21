@@ -9,5 +9,4 @@ import { Marca } from './entities/marca.entity';
   controllers: [MarcasController],
   providers: [MarcasService],
 })
-export class MarcasModule {
-}
+export class MarcasModule {}

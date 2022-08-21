@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { CategoriasService } from './categorias.service';
 import { CreateCategoriaDto } from './dto/create-categoria.dto';
 import { UpdateCategoriaDto } from './dto/update-categoria.dto';
@@ -6,8 +15,7 @@ import { FindCategoriasDto } from './dto/find-categorias.dto';
 
 @Controller('categorias')
 export class CategoriasController {
-  constructor(private readonly categoriasService: CategoriasService) {
-  }
+  constructor(private readonly categoriasService: CategoriasService) {}
 
   @Post()
   create(@Body() createCategoriaDto: CreateCategoriaDto) {
@@ -25,7 +33,10 @@ export class CategoriasController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() updateCategoriaDto: UpdateCategoriaDto) {
+  update(
+    @Param('id') id: number,
+    @Body() updateCategoriaDto: UpdateCategoriaDto,
+  ) {
     return this.categoriasService.update(id, updateCategoriaDto);
   }
 

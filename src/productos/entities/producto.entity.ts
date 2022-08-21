@@ -5,8 +5,10 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Descuento } from '../../descuentos/entities/descuento.entity';
 
 @Entity()
 export class Producto {
@@ -30,6 +32,9 @@ export class Producto {
 
   @Column('decimal', { precision: 6, scale: 2 })
   precioVenta: number;
+
+  @OneToOne(() => Descuento, (descuento) => descuento.producto)
+  descuento: Descuento;
 
   @Column()
   descripcion: string;

@@ -1,4 +1,4 @@
-import { IsArray, IsIn, IsNumber, IsOptional } from 'class-validator';
+import {IsArray, IsIn, IsNumber, IsOptional} from 'class-validator';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 
 export class FindProductosDTO extends PaginationQueryDto {
@@ -18,8 +18,8 @@ export class FindProductosDTO extends PaginationQueryDto {
   @IsNumber()
   maxPrice?: number;
 
-  // @IsOptional()
-  // @IsArray()
-  // @IsNumber({}, { each: true })
-  // brands: number[];
+  @IsOptional()
+  @IsArray()
+  @IsNumber({}, { each: true })
+  marcas: number[];
 }
