@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateMarcaDto } from './dto/create-marca.dto';
@@ -11,8 +15,8 @@ import { paginate } from '../common/helpers/paginate';
 export class MarcasService {
   constructor(
     @InjectRepository(Marca)
-    private readonly marcasRepository: Repository<Marca>) {
-  }
+    private readonly marcasRepository: Repository<Marca>,
+  ) {}
 
   async create(createMarcaDto: CreateMarcaDto) {
     const marca = await this.marcasRepository.create(createMarcaDto);
@@ -26,10 +30,11 @@ export class MarcasService {
   async findAll(findMarcasDto: FindMarcasDto) {
     const { page, limit, sort, order } = findMarcasDto;
 
-    const skip = ((page - 1) * limit);
+    const skip = (page - 1) * limit;
 
     const [data, totalItems] = await this.marcasRepository.findAndCount({
-      take: limit, skip,
+      take: limit,
+      skip,
       order: { [sort]: order },
     });
 
@@ -50,7 +55,8 @@ export class MarcasService {
 
   async update(id: number, updateMarcaDto: UpdateMarcaDto) {
     const marca = await this.marcasRepository.preload({
-      id, ...updateMarcaDto,
+      id,
+      ...updateMarcaDto,
     });
 
     if (!marca) throw new NotFoundException();
