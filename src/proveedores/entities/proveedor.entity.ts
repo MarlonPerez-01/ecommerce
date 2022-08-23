@@ -13,23 +13,23 @@ export class Proveedor {
   @Column()
   primerNombre: string;
 
-  @Column()
+  @Column({ nullable: true })
   segundoNombre: string;
 
   @Column()
   primerApellido: string;
 
-  @Column()
+  @Column({ nullable: true })
   segundoApellido: string;
 
   @Column()
   empresa: string;
 
-  @Column()
+  @Column({ nullable: true })
   telefono: number;
 
-  @Column()
-  correo: number;
+  @Column({ nullable: true })
+  correo: string;
 
   @DeleteDateColumn({ select: false })
   deletedAt: Date;
