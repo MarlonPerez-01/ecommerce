@@ -1,8 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Categoria } from 'src/categorias/entities/categoria.entity';
 import { paginate } from 'src/common/helpers/paginate';
 import { Marca } from 'src/marcas/entities/marca.entity';
+import { Proveedor } from 'src/proveedores/entities/proveedor.entity';
 import { Repository } from 'typeorm';
 import { CreateProductoDto } from './dto/create-producto.dto';
 import { FindProductosDTO } from './dto/find-productos.dto';
@@ -18,6 +23,8 @@ export class ProductosService {
     private readonly marcaRepository: Repository<Marca>,
     @InjectRepository(Categoria)
     private readonly categoriaRepository: Repository<Categoria>,
+    @InjectRepository(Proveedor)
+    private readonly proveedorRepository: Repository<Proveedor>,
   ) {}
 
   async create(createProductoDto: CreateProductoDto) {
@@ -83,13 +90,20 @@ export class ProductosService {
       updateProductoDto.marca &&
       (await this.preloadMarcaByNombre(updateProductoDto.marca));
 
+    const proveedor =
+      updateProductoDto.proveedor &&
+      (await this.proveedorRepository.findOneBy({
+        id: updateProductoDto.proveedor,
+      }));
+
+    if (updateProductoDto.proveedor && !proveedor)
+      throw new BadRequestException();
+
     const producto = await this.productoRepository.preload({
       id,
       ...updateProductoDto,
       categoria,
-      ...(updateProductoDto.proveedor && {
-        proveedor: updateProductoDto.proveedor,
-      }),
+      proveedor,
       ...(updateProductoDto.imagenes && {
         imagenes: updateProductoDto.imagenes.toString(),
       }),

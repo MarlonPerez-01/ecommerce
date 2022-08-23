@@ -1,9 +1,11 @@
 import { Categoria } from 'src/categorias/entities/categoria.entity';
 import { Marca } from 'src/marcas/entities/marca.entity';
+import { Proveedor } from 'src/proveedores/entities/proveedor.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -32,9 +34,9 @@ export class Producto {
   })
   categoria: Categoria;
 
-  // FIXME: debe estar en una tabla separada
-  @Column({ nullable: true })
-  proveedor: string;
+  @OneToOne(() => Proveedor, { nullable: true })
+  @JoinColumn()
+  proveedor: Proveedor;
 
   @Column('jsonb', { nullable: true })
   propiedades: any;
