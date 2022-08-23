@@ -14,6 +14,7 @@ import { DepartamentosModule } from './departamentos/departamentos.module';
 import { MunicipiosModule } from './municipios/municipios.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { LocalFileModule } from './local-file/local-file.module';
+import { InventariosModule } from './inventarios/inventarios.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { LocalFileModule } from './local-file/local-file.module';
     MunicipiosModule,
     UsuariosModule,
     LocalFileModule,
+    InventariosModule,
   ],
   controllers: [AppController],
   providers: [AppService],
