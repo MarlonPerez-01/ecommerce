@@ -21,11 +21,27 @@ export class Producto {
   @Column({ unique: true })
   sku: string;
 
-  @ManyToOne(() => Marca, (marca) => marca.productos)
+  @Column({ unique: true })
+  slug: string;
+
+  @ManyToOne(() => Marca, (marca) => marca.productos, { cascade: ['insert'] })
   marca: Marca;
 
-  @ManyToOne(() => Categoria, (categoria) => categoria.productos)
+  @ManyToOne(() => Categoria, (categoria) => categoria.productos, {
+    cascade: ['insert'],
+  })
   categoria: Categoria;
+
+  // FIXME: debe estar en una tabla separada
+  @Column({ nullable: true })
+  proveedor: string;
+
+  @Column('jsonb', { nullable: true })
+  propiedades: any;
+
+  // FIXME: debe estar en una tabla separada
+  @Column({ nullable: true })
+  imagenes: string;
 
   @Column('decimal', { precision: 6, scale: 2 })
   precioTienda: number;
@@ -36,10 +52,10 @@ export class Producto {
   @OneToOne(() => Descuento, (descuento) => descuento.producto)
   descuento: Descuento;
 
-  @Column()
+  @Column({ nullable: true })
   descripcion: string;
 
-  @Column()
+  @Column({ default: false })
   disponible: boolean;
 
   @CreateDateColumn()

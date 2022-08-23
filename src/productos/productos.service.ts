@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Categoria } from 'src/categorias/entities/categoria.entity';
 import { paginate } from 'src/common/helpers/paginate';
+import { Marca } from 'src/marcas/entities/marca.entity';
 import { Repository } from 'typeorm';
 import { CreateProductoDto } from './dto/create-producto.dto';
 import { FindProductosDTO } from './dto/find-productos.dto';
@@ -12,10 +14,33 @@ export class ProductosService {
   constructor(
     @InjectRepository(Producto)
     private readonly productoRepository: Repository<Producto>,
+    @InjectRepository(Marca)
+    private readonly marcaRepository: Repository<Marca>,
+    @InjectRepository(Categoria)
+    private readonly categoriaRepository: Repository<Categoria>,
   ) {}
 
   async create(createProductoDto: CreateProductoDto) {
-    const producto = await this.productoRepository.create(createProductoDto);
+    const marca = await this.preloadMarcaByNombre(createProductoDto.marca);
+
+    const categoria = await this.preloadCategoriaByNombre(
+      createProductoDto.categoria,
+    );
+
+    const producto = this.productoRepository.create({
+      nombre: createProductoDto.nombre,
+      sku: createProductoDto.sku,
+      slug: createProductoDto.slug,
+      precioTienda: createProductoDto.precioTienda,
+      precioVenta: createProductoDto.precioVenta,
+      propiedades: createProductoDto.propiedades,
+      ...(createProductoDto.imagenes && {
+        imagenes: createProductoDto.imagenes.toString(),
+      }),
+      categoria,
+      marca,
+    });
+
     return this.productoRepository.save(producto);
   }
 
@@ -50,12 +75,26 @@ export class ProductosService {
   }
 
   async update(id: number, updateProductoDto: UpdateProductoDto) {
+    const categoria =
+      updateProductoDto.categoria &&
+      (await this.preloadCategoriaByNombre(updateProductoDto.categoria));
+
+    const marca =
+      updateProductoDto.marca &&
+      (await this.preloadMarcaByNombre(updateProductoDto.marca));
+
     const producto = await this.productoRepository.preload({
       id,
       ...updateProductoDto,
+      categoria,
+      ...(updateProductoDto.proveedor && {
+        proveedor: updateProductoDto.proveedor,
+      }),
+      ...(updateProductoDto.imagenes && {
+        imagenes: updateProductoDto.imagenes.toString(),
+      }),
+      marca,
     });
-
-    if (!producto) throw new NotFoundException();
 
     return this.productoRepository.save(producto);
   }
@@ -63,5 +102,23 @@ export class ProductosService {
   async remove(id: number) {
     const producto = await this.findOne(id);
     return this.productoRepository.softDelete(producto);
+  }
+
+  private async preloadMarcaByNombre(nombre: string): Promise<Marca> {
+    const marcaExistente = await this.marcaRepository.findOneBy({ nombre });
+    if (marcaExistente) {
+      return marcaExistente;
+    }
+    return this.marcaRepository.create({ nombre });
+  }
+
+  private async preloadCategoriaByNombre(nombre: string): Promise<Categoria> {
+    const categoriaExistente = await this.categoriaRepository.findOneBy({
+      nombre,
+    });
+    if (categoriaExistente) {
+      return categoriaExistente;
+    }
+    return this.categoriaRepository.create({ nombre });
   }
 }

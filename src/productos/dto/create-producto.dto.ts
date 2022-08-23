@@ -1,4 +1,11 @@
-import { IsBoolean, IsNumber, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateProductoDto {
   @IsString()
@@ -7,15 +14,38 @@ export class CreateProductoDto {
   @IsString()
   sku: string;
 
+  @IsString()
+  slug: string;
+
+  @IsString()
+  marca: string;
+
+  @IsString()
+  categoria: string;
+
+  @IsOptional()
+  @IsNumber()
+  proveedor: string;
+
+  @IsOptional()
+  @IsObject()
+  propiedades: object;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  imagenes: string[];
+
   @IsNumber()
   precioTienda: number;
 
   @IsNumber()
   precioVenta: number;
 
+  @IsOptional()
   @IsString()
   descripcion: string;
 
   @IsBoolean()
-  disponible: boolean;
+  estado: boolean;
 }
