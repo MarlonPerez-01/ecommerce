@@ -15,7 +15,7 @@ export class Marca {
   @Column({ unique: true })
   nombre: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: true })
   imagen: string;
 
   @OneToMany(() => Producto, (producto) => producto.marca)
