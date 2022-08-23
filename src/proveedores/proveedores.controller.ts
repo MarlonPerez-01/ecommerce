@@ -1,7 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { ProveedoresService } from './proveedores.service';
 import { CreateProveedorDto } from './dto/create-proveedor.dto';
 import { UpdateProveedorDto } from './dto/update-proveedor.dto';
+import { FindProveedoresDto } from './dto/find-proveedores.dto';
 
 @Controller('proveedores')
 export class ProveedoresController {
@@ -13,8 +23,8 @@ export class ProveedoresController {
   }
 
   @Get()
-  findAll() {
-    return this.proveedoresService.findAll();
+  findAll(@Query() findProveedoresDto: FindProveedoresDto) {
+    return this.proveedoresService.findAll(findProveedoresDto);
   }
 
   @Get(':id')
@@ -23,7 +33,10 @@ export class ProveedoresController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() updateProveedoreDto: UpdateProveedorDto) {
+  update(
+    @Param('id') id: number,
+    @Body() updateProveedoreDto: UpdateProveedorDto,
+  ) {
     return this.proveedoresService.update(id, updateProveedoreDto);
   }
 
