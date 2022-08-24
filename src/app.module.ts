@@ -18,6 +18,7 @@ import { InventariosModule } from './inventarios/inventarios.module';
 import { PedidosModule } from './pedidos/pedidos.module';
 import { DetallePedidosModule } from './detalle-pedidos/detalle-pedidos.module';
 import { DireccionesModule } from './direcciones/direcciones.module';
+import { PersonasModule } from './personas/personas.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { DireccionesModule } from './direcciones/direcciones.module';
     PedidosModule,
     DetallePedidosModule,
     DireccionesModule,
+    PersonasModule,
   ],
   controllers: [AppController],
   providers: [AppService],

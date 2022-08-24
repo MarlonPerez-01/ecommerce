@@ -1,32 +1,22 @@
 import {
   Column,
   DeleteDateColumn,
-  Entity,
+  Entity, JoinColumn, OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import {Persona} from '../../personas/entities/persona.entity';
 
 @Entity()
 export class CreateClienteDto {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  primerNombre: string;
-
-  @Column()
-  segundoNombre: string;
-
-  @Column()
-  primerApellido: string;
-
-  @Column()
-  segundoApellido: string;
+  @OneToOne(() => Persona)
+  @JoinColumn()
+  persona: Persona;
 
   @Column()
   telefono: number;
-
-  @Column()
-  correo: number;
 
   @DeleteDateColumn({ select: false })
   deletedAt: Date;
