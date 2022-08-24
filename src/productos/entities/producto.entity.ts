@@ -1,6 +1,7 @@
 import { Categoria } from 'src/categorias/entities/categoria.entity';
 import { Marca } from 'src/marcas/entities/marca.entity';
 import { Proveedor } from 'src/proveedores/entities/proveedor.entity';
+import { Descuento } from '../../descuentos/entities/descuento.entity';
 import {
   Column,
   CreateDateColumn,
@@ -10,7 +11,6 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Descuento } from '../../descuentos/entities/descuento.entity';
 
 @Entity()
 export class Producto {

@@ -15,6 +15,9 @@ import { MunicipiosModule } from './municipios/municipios.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { LocalFileModule } from './local-file/local-file.module';
 import { InventariosModule } from './inventarios/inventarios.module';
+import { PedidosModule } from './pedidos/pedidos.module';
+import { DetallePedidosModule } from './detalle-pedidos/detalle-pedidos.module';
+import { DireccionesModule } from './direcciones/direcciones.module';
 
 @Module({
   imports: [
@@ -43,6 +46,9 @@ import { InventariosModule } from './inventarios/inventarios.module';
     UsuariosModule,
     LocalFileModule,
     InventariosModule,
+    PedidosModule,
+    DetallePedidosModule,
+    DireccionesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
