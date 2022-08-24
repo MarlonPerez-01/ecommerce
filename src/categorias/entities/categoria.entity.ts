@@ -13,7 +13,7 @@ export class Categoria {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Length(3)
+  @Length(2)
   @Column({ unique: true })
   nombre: string;
 

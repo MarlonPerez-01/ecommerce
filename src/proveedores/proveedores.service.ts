@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { paginate } from 'src/common/helpers/paginate';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { CreateProveedorDto } from './dto/create-proveedor.dto';
 import { FindProveedoresDto } from './dto/find-proveedores.dto';
 import { UpdateProveedorDto } from './dto/update-proveedor.dto';
@@ -19,7 +19,17 @@ export class ProveedoresService {
   }
 
   async findAll(findProveedoresDto: FindProveedoresDto) {
-    const { page, limit, sort, order } = findProveedoresDto;
+    const {
+      page,
+      limit,
+      sort,
+      order,
+      primerNombre,
+      primerApellido,
+      empresa,
+      telefono,
+      correo,
+    } = findProveedoresDto;
 
     const skip = (page - 1) * limit;
 
@@ -27,6 +37,23 @@ export class ProveedoresService {
       take: limit,
       skip,
       order: { [sort]: order },
+      where: {
+        ...(primerNombre && {
+          primerNombre: Like(`%${primerNombre}%`),
+        }),
+        ...(primerApellido && {
+          primerApellido: Like(`%${primerApellido}%`),
+        }),
+        ...(empresa && {
+          empresa: Like(`%${empresa}%`),
+        }),
+        ...(correo && {
+          correo: Like(`%${correo}%`),
+        }),
+        ...(telefono && {
+          telefono,
+        }),
+      },
     });
 
     const pagination = paginate(page, limit, totalItems);
