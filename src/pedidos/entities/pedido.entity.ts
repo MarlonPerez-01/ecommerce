@@ -3,9 +3,11 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Proveedor } from '../../proveedores/entities/proveedor.entity';
+import { DetallePedido } from '../../detalle-pedidos/entities/detalle-pedido.entity';
 
 @Entity()
 export class Pedido {
@@ -14,6 +16,9 @@ export class Pedido {
 
   @ManyToOne(() => Proveedor, (proveedor) => proveedor.pedidos)
   proveedor: Proveedor;
+
+  @OneToMany(() => DetallePedido, (detallePedido) => detallePedido.pedido)
+  detallePedidos: DetallePedido[];
 
   @Column({ type: 'decimal', precision: 6, scale: 2 })
   total: number;
