@@ -20,6 +20,7 @@ import { DetallePedidosModule } from './detalle-pedidos/detalle-pedidos.module';
 import { DireccionesModule } from './direcciones/direcciones.module';
 import { PersonasModule } from './personas/personas.module';
 import { EmpleadosModule } from './empleados/empleados.module';
+import { TipoUsuariosModule } from './tipo-usuarios/tipo-usuarios.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { EmpleadosModule } from './empleados/empleados.module';
     DireccionesModule,
     PersonasModule,
     EmpleadosModule,
+    TipoUsuariosModule,
   ],
   controllers: [AppController],
   providers: [AppService],
