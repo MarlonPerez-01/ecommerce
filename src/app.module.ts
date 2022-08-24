@@ -1,26 +1,26 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { configuration } from './config/configuration';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { configuration } from './config/configuration';
-import { MarcasModule } from './marcas/marcas.module';
 import { CategoriasModule } from './categorias/categorias.module';
-import { ProductosModule } from './productos/productos.module';
-import { DescuentosModule } from './descuentos/descuentos.module';
 import { ClientesModule } from './clientes/clientes.module';
-import { ProveedoresModule } from './proveedores/proveedores.module';
+import { ConfigModule } from '@nestjs/config';
 import { DepartamentosModule } from './departamentos/departamentos.module';
-import { MunicipiosModule } from './municipios/municipios.module';
-import { UsuariosModule } from './usuarios/usuarios.module';
-import { LocalFileModule } from './local-file/local-file.module';
-import { InventariosModule } from './inventarios/inventarios.module';
-import { PedidosModule } from './pedidos/pedidos.module';
+import { DescuentosModule } from './descuentos/descuentos.module';
 import { DetallePedidosModule } from './detalle-pedidos/detalle-pedidos.module';
 import { DireccionesModule } from './direcciones/direcciones.module';
-import { PersonasModule } from './personas/personas.module';
 import { EmpleadosModule } from './empleados/empleados.module';
+import { InventariosModule } from './inventarios/inventarios.module';
+import { LocalFileModule } from './local-file/local-file.module';
+import { MarcasModule } from './marcas/marcas.module';
+import { MunicipiosModule } from './municipios/municipios.module';
+import { PedidosModule } from './pedidos/pedidos.module';
+import { PersonasModule } from './personas/personas.module';
+import { ProductosModule } from './productos/productos.module';
+import { ProveedoresModule } from './proveedores/proveedores.module';
 import { TipoUsuariosModule } from './tipo-usuarios/tipo-usuarios.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsuariosModule } from './usuarios/usuarios.module';
 
 @Module({
   imports: [
@@ -38,23 +38,23 @@ import { TipoUsuariosModule } from './tipo-usuarios/tipo-usuarios.module';
       autoLoadEntities: true,
       synchronize: process.env.NODE_ENV === 'development',
     }),
-    MarcasModule,
     CategoriasModule,
-    ProductosModule,
-    DescuentosModule,
     ClientesModule,
-    ProveedoresModule,
     DepartamentosModule,
-    MunicipiosModule,
-    UsuariosModule,
-    LocalFileModule,
-    InventariosModule,
-    PedidosModule,
+    DescuentosModule,
     DetallePedidosModule,
     DireccionesModule,
-    PersonasModule,
     EmpleadosModule,
+    InventariosModule,
+    LocalFileModule,
+    MarcasModule,
+    MunicipiosModule,
+    PedidosModule,
+    PersonasModule,
+    ProductosModule,
+    ProveedoresModule,
     TipoUsuariosModule,
+    UsuariosModule,
   ],
   controllers: [AppController],
   providers: [AppService],

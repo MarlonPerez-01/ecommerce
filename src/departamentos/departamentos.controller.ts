@@ -25,7 +25,7 @@ export class DepartamentosController {
     return this.departamentosService.findAll();
   }
 
-  @Get(':id')
+  @Get(':id/municipios')
   findOne(@Param('id') id: number) {
     return this.departamentosService.findOne(id);
   }

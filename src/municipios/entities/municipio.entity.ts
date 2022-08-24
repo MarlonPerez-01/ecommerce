@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Departamento } from '../../departamentos/entities/departamento.entity';
 
 @Entity()
 export class Municipio {
@@ -7,4 +8,7 @@ export class Municipio {
 
   @Column()
   nombre: string;
+
+  @ManyToOne(() => Departamento, (departamento) => departamento.municipios)
+  departamento: Departamento;
 }
