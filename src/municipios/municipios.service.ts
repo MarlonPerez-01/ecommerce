@@ -20,8 +20,8 @@ export class MunicipiosService {
     return this.municipioRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} municipio`;
+  async findOne(id: number) {
+    return this.municipioRepository.findOne({ where: { id } });
   }
 
   update(id: number, updateMunicipioDto: UpdateMunicipioDto) {
