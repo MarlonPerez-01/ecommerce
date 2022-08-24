@@ -18,17 +18,17 @@ export class DireccionesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.direccionesService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.direccionesService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDireccioneDto: UpdateDireccionDto) {
-    return this.direccionesService.update(+id, updateDireccioneDto);
+  update(@Param('id') id: number, @Body() updateDireccioneDto: UpdateDireccionDto) {
+    return this.direccionesService.update(id, updateDireccioneDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.direccionesService.remove(+id);
+  remove(@Param('id') id: number) {
+    return this.direccionesService.remove(id);
   }
 }
