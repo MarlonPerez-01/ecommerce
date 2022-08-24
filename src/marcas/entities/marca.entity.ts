@@ -6,12 +6,14 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Length } from 'class-validator';
 
 @Entity()
 export class Marca {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Length(2)
   @Column({ unique: true })
   nombre: string;
 

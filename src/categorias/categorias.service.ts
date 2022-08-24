@@ -22,7 +22,6 @@ export class CategoriasService {
     const categoria = await this.categoriaRepository.create(createCategoriaDto);
 
     const existe = await this.getByNombre(createCategoriaDto.nombre);
-
     if (existe) throw new ConflictException();
 
     return this.categoriaRepository.save(categoria);

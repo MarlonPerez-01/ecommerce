@@ -6,13 +6,15 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Length } from 'class-validator';
 
 @Entity()
 export class Categoria {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Length(3)
+  @Column({ unique: true })
   nombre: string;
 
   @OneToMany(() => Producto, (producto) => producto.categoria)
