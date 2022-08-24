@@ -2,8 +2,10 @@ import {
   Column,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Pedido } from '../../pedidos/entities/pedido.entity';
 
 @Entity()
 export class Proveedor {
@@ -30,6 +32,9 @@ export class Proveedor {
 
   @Column({ nullable: true })
   correo: string;
+
+  @OneToMany(() => Pedido, (pedido) => pedido.proveedor)
+  pedidos: Pedido[];
 
   @DeleteDateColumn({ select: false })
   deletedAt: Date;
