@@ -1,4 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Inventario {
@@ -13,4 +18,7 @@ export class Inventario {
 
   @Column({ type: 'decimal', precision: 6, scale: 2 })
   estropeado: number;
+
+  @DeleteDateColumn({ select: false })
+  deletedAt: Date;
 }
