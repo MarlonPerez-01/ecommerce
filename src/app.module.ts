@@ -22,6 +22,7 @@ import { TipoUsuariosModule } from './tipo-usuarios/tipo-usuarios.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { CuponesModule } from './cupones/cupones.module';
+import { ComentariosModule } from './comentarios/comentarios.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { CuponesModule } from './cupones/cupones.module';
     TipoUsuariosModule,
     UsuariosModule,
     CuponesModule,
+    ComentariosModule,
   ],
   controllers: [AppController],
   providers: [AppService],
