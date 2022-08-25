@@ -21,6 +21,7 @@ import { ProveedoresModule } from './proveedores/proveedores.module';
 import { TipoUsuariosModule } from './tipo-usuarios/tipo-usuarios.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsuariosModule } from './usuarios/usuarios.module';
+import { CuponesModule } from './cupones/cupones.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { UsuariosModule } from './usuarios/usuarios.module';
     ProveedoresModule,
     TipoUsuariosModule,
     UsuariosModule,
+    CuponesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
