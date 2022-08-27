@@ -1,38 +1,14 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+## Descripción
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Rest API para un Ecommerce de venta de hardware utilizando [Nest](https://github.com/nestjs/nest)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
+## 🔨 Instalación
 
 ```bash
 $ npm install
 ```
 
-## Running the app
+## 🔧 Ejecutar la aplicación
 
 ```bash
 # development
@@ -45,7 +21,7 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Test
+## 🧪 Test
 
 ```bash
 # unit tests
@@ -58,16 +34,31 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
+## 💻 Tecnologías
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- [Typescript](https://www.typescriptlang.org/) - TypeScript es un lenguaje de programación fuertemente tipado que
+  basado en JavaScript.
+- [Node.js](https://nodejs.org/) - Node.js es un entorno de ejecución para JavaScript construido con V8, motor de
+  JavaScript de Chrome.
+- [NestJS](https://nestjs.com/) - Framwework progresivo de Node.js para crear aplicaciones del lado del servidor
+  eficientes, confiables y escalables.
+- [Express](https://expressjs.com/) - Express es una framework de aplicaciones web Node.js mínimo y flexible que
+  proporciona un conjunto sólido de características para las aplicaciones web y móviles.
+- [Postgresql](https://www.postgresql.org/) - PostgreSQL es un poderoso sistema de base de datos relacional de
+  objetos de código abierto.
+- [Typeorm](https://typeorm.io/) - Es un ORM que puede ejecutarse en las plataformas NodeJS, Browser, Cordova,
+  PhoneGap, Ionic, React Native, NativeScript, Expo y Electron y puede usarse con TypeScript y JavaScript (ES5, ES6,
+  ES7, ES8).
+- [Class-validator](https://github.com/typestack/class-validator) - Validación de propiedades basada en decoradores para clases.
+- [Class-transformer](https://github.com/typestack/class-transformer) - Transformación, serialización y
+  deserialización basadas en decoratores entre objetos y clases. Una biblioteca para ayudarte a codificar contraseñas.
+- [Bcrypt](https://github.com/kelektiv/node.bcrypt.js) - Librería para generar hashs.
+- [Prettier](https://prettier.io/) - Un formateador de código obstinado.
 
-## Stay in touch
+## 📧 Contacto
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Autor - [Marlon Pérez](perezmarlon538@gmail.com)
 
-## License
+## 📄 Licencia
 
-Nest is [MIT licensed](LICENSE).
+El proyecto está bajo [licencia MIT](LICENSE).
