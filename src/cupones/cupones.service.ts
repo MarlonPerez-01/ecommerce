@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCuponeDto } from './dto/create-cupone.dto';
-import { UpdateCuponeDto } from './dto/update-cupone.dto';
+import { CreateCuponDto } from './dto/create-cupon.dto';
+import { UpdateCuponeDto } from './dto/update-cupon.dto';
 
 @Injectable()
 export class CuponesService {
-  create(createCuponeDto: CreateCuponeDto) {
-    return 'This action adds a new cupone';
+  create(createCuponeDto: CreateCuponDto) {
+    return 'This action adds a new cupon';
   }
 
   findAll() {
@@ -13,14 +13,14 @@ export class CuponesService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} cupone`;
+    return `This action returns a #${id} cupon`;
   }
 
   update(id: number, updateCuponeDto: UpdateCuponeDto) {
-    return `This action updates a #${id} cupone`;
+    return `This action updates a #${id} cupon`;
   }
 
   remove(id: number) {
-    return `This action removes a #${id} cupone`;
+    return `This action removes a #${id} cupon`;
   }
 }

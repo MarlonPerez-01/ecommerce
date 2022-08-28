@@ -1,14 +1,14 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { CuponesService } from './cupones.service';
-import { CreateCuponeDto } from './dto/create-cupone.dto';
-import { UpdateCuponeDto } from './dto/update-cupone.dto';
+import { CreateCuponDto } from './dto/create-cupon.dto';
+import { UpdateCuponeDto } from './dto/update-cupon.dto';
 
 @Controller('cupones')
 export class CuponesController {
   constructor(private readonly cuponesService: CuponesService) {}
 
   @Post()
-  create(@Body() createCuponeDto: CreateCuponeDto) {
+  create(@Body() createCuponeDto: CreateCuponDto) {
     return this.cuponesService.create(createCuponeDto);
   }
 
