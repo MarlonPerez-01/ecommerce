@@ -1,4 +1,5 @@
 import {
+  Column,
   DeleteDateColumn,
   Entity,
   OneToOne,
@@ -10,6 +11,12 @@ import { Cliente } from '../../clientes/entities/cliente.entity';
 export class Usuario {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column()
+  correo: string;
+
+  @Column()
+  contrasenia: string;
 
   @OneToOne(() => Cliente, (cliente) => cliente.usuario)
   cliente: Cliente;

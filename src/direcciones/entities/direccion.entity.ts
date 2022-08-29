@@ -1,4 +1,10 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Departamento } from '../../departamentos/entities/departamento.entity';
 import { Municipio } from '../../municipios/entities/municipio.entity';
 
@@ -7,10 +13,18 @@ export class Direccion {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => Departamento)
+  @Column({ type: 'int', nullable: false })
+  departamentoId: number;
+
+  @ManyToOne(() => Departamento)
+  @JoinColumn({ name: 'departamentoId' })
   departamento: Departamento;
 
-  @OneToOne(() => Municipio)
+  @Column({ type: 'int', nullable: false })
+  municipioId: number;
+
+  @ManyToOne(() => Municipio)
+  @JoinColumn({ name: 'municipioId' })
   municipio: Municipio;
 
   @Column()
