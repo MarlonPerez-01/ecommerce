@@ -1,12 +1,16 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { DataSource, QueryRunner, Repository } from 'typeorm';
 import { Usuario } from '../usuarios/entities/usuario.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
-import * as bcrypt from 'bcrypt';
 import { Cliente } from '../clientes/entities/cliente.entity';
-import { Direccion } from '../direcciones/entities/direccion.entity';
+import { Persona } from '../personas/entities/persona.entity';
 
 @Injectable()
 export class AuthService {
@@ -23,11 +27,6 @@ export class AuthService {
     await queryRunner.startTransaction();
 
     try {
-      const direccion = await this.createDireccion(
-        registerAuthDto.direccion,
-        queryRunner,
-      );
-
       const usuario = await this.createUsuario(
         {
           correo: registerAuthDto.correo,
@@ -36,7 +35,17 @@ export class AuthService {
         queryRunner,
       );
 
-      await this.createCliente({ direccion, usuario }, queryRunner);
+      const persona = await this.createPersona(
+        {
+          primerNombre: registerAuthDto.primerNombre,
+          segundoNombre: registerAuthDto.segundoNombre,
+          primerApellido: registerAuthDto.primerApellido,
+          segundoApellido: registerAuthDto.segundoApellido,
+        },
+        queryRunner,
+      );
+
+      await this.createCliente({ usuario, persona }, queryRunner);
 
       await queryRunner.commitTransaction();
 
@@ -49,13 +58,6 @@ export class AuthService {
     }
   }
 
-  async createDireccion(
-    direccion: Partial<Direccion>,
-    queryRunner: QueryRunner,
-  ) {
-    return queryRunner.manager.getRepository(Direccion).save(direccion);
-  }
-
   async createUsuario(usuario: Partial<Usuario>, queryRunner: QueryRunner) {
     const hash = await bcrypt.hash(usuario.contrasenia, 10);
 
@@ -65,17 +67,33 @@ export class AuthService {
     });
   }
 
-  async createCliente(cliente: Partial<Cliente>, queryRunner: QueryRunner) {
-    await queryRunner.manager
-      .getRepository(Cliente)
-      .save({ usuario: cliente.usuario, direccion: cliente.direccion });
+  async createPersona(persona: Partial<Persona>, queryRunner: QueryRunner) {
+    return queryRunner.manager.getRepository(Persona).save(persona);
   }
 
-  async login(loginAuthDto: LoginAuthDto) {
-    return 'login';
+  async createCliente(cliente: Partial<Cliente>, queryRunner: QueryRunner) {
+    await queryRunner.manager.getRepository(Cliente).save({
+      usuario: cliente.usuario,
+      persona: cliente.persona,
+    });
   }
 
   async logout() {
     return 'logout';
+  }
+
+  async login(loginAuthDto: LoginAuthDto) {
+    const usuario = await this.usuariosRepository.findOne({
+      where: { correo: loginAuthDto.correo },
+    });
+
+    const match = await bcrypt.compare(
+      loginAuthDto.contrasenia,
+      usuario.contrasenia,
+    );
+
+    if (!match) throw new UnauthorizedException();
+
+    return 'Has iniciado sesion';
   }
 }

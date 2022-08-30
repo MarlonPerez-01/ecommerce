@@ -1,14 +1,26 @@
-import { IsNotEmpty, IsString, ValidateNested } from 'class-validator';
-import { DireccionAuthDto } from './direccion-auth.dto';
+import { IsEmail, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class RegisterAuthDto {
   @IsString()
+  primerNombre: string;
+
+  @IsOptional()
+  @IsString()
+  segundoNombre: string;
+
+  @IsString()
+  primerApellido: string;
+
+  @IsOptional()
+  @IsString()
+  segundoApellido: string;
+
+  @IsEmail()
   correo: string;
 
   @IsString()
   contrasenia: string;
 
-  @IsNotEmpty()
-  @ValidateNested()
-  direccion: DireccionAuthDto;
+  @IsNumber()
+  telefono: number;
 }

@@ -7,8 +7,8 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Direccion } from '../../direcciones/entities/direccion.entity';
 import { Usuario } from '../../usuarios/entities/usuario.entity';
+import { Persona } from '../../personas/entities/persona.entity';
 
 @Entity()
 export class Cliente {
@@ -16,18 +16,18 @@ export class Cliente {
   id: number;
 
   @Column({ type: 'int', nullable: false })
+  personaId: number;
+
+  @OneToOne(() => Persona)
+  @JoinColumn({ name: 'personaId' })
+  persona: Persona;
+
+  @Column({ type: 'int', nullable: false })
   usuarioId: number;
 
   @OneToOne(() => Usuario)
   @JoinColumn({ name: 'usuarioId' })
   usuario: Usuario;
-
-  @Column({ type: 'int', nullable: false })
-  direccionId: number;
-
-  @OneToOne(() => Direccion)
-  @JoinColumn({ name: 'direccionId' })
-  direccion: Direccion;
 
   @CreateDateColumn({ select: false })
   createdAt: Date;

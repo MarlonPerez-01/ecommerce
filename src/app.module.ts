@@ -24,6 +24,8 @@ import { UsuariosModule } from './usuarios/usuarios.module';
 import { CuponesModule } from './cupones/cupones.module';
 import { ComentariosModule } from './comentarios/comentarios.module';
 import { CargosModule } from './cargos/cargos.module';
+import { OrdenesModule } from './ordenes/ordenes.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -61,6 +63,8 @@ import { CargosModule } from './cargos/cargos.module';
     CuponesModule,
     ComentariosModule,
     CargosModule,
+    OrdenesModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
