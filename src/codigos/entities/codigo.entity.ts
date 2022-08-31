@@ -22,6 +22,9 @@ export class Codigo {
   @JoinColumn({ name: 'usuarioId' })
   usuario: Usuario;
 
+  @Column({ type: 'varchar', length: 8, nullable: false })
+  codigo: string;
+
   @Column()
   tipo: string;
 

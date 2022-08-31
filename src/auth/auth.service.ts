@@ -11,12 +11,16 @@ import { RegisterAuthDto } from './dto/register-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { Cliente } from '../clientes/entities/cliente.entity';
 import { Persona } from '../personas/entities/persona.entity';
+import { EmailsService } from '../emails/emails.service';
+import { Codigo } from '../codigos/entities/codigo.entity';
+import { addMinutes } from '../common/helpers/Date';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(Usuario)
     private readonly usuariosRepository: Repository<Usuario>,
+    private readonly emailsService: EmailsService,
     private readonly dataSource: DataSource,
   ) {}
 
@@ -49,6 +53,15 @@ export class AuthService {
 
       await queryRunner.commitTransaction();
 
+      const codigo = this.generateCodigo();
+      await this.createCodigo(codigo, usuario, queryRunner);
+
+      await this.emailsService.sendAccountConfirmation({
+        to: registerAuthDto.correo,
+        nombre: `${registerAuthDto.primerNombre} ${registerAuthDto.primerApellido}`,
+        codigo,
+      });
+
       return 'Usuario registrado';
     } catch (err) {
       await queryRunner.rollbackTransaction();
@@ -58,7 +71,10 @@ export class AuthService {
     }
   }
 
-  async createUsuario(usuario: Partial<Usuario>, queryRunner: QueryRunner) {
+  private async createUsuario(
+    usuario: Partial<Usuario>,
+    queryRunner: QueryRunner,
+  ) {
     const hash = await bcrypt.hash(usuario.contrasenia, 10);
 
     return queryRunner.manager.getRepository(Usuario).save({
@@ -67,19 +83,39 @@ export class AuthService {
     });
   }
 
-  async createPersona(persona: Partial<Persona>, queryRunner: QueryRunner) {
+  private async createPersona(
+    persona: Partial<Persona>,
+    queryRunner: QueryRunner,
+  ) {
     return queryRunner.manager.getRepository(Persona).save(persona);
   }
 
-  async createCliente(cliente: Partial<Cliente>, queryRunner: QueryRunner) {
+  private async createCliente(
+    cliente: Partial<Cliente>,
+    queryRunner: QueryRunner,
+  ) {
     await queryRunner.manager.getRepository(Cliente).save({
       usuario: cliente.usuario,
       persona: cliente.persona,
     });
   }
 
-  async logout() {
-    return 'logout';
+  private generateCodigo() {
+    const codigo = Math.floor(Math.random() * 100_000_000);
+    return codigo.toString();
+  }
+
+  private async createCodigo(
+    codigo: string,
+    usuario: Usuario,
+    queryRunner: QueryRunner,
+  ) {
+    await queryRunner.manager.getRepository(Codigo).save({
+      codigo: codigo.toString(),
+      tipo: 'correo',
+      usuarioId: usuario.id,
+      fechaExpiracion: addMinutes(new Date(), 15),
+    });
   }
 
   async login(loginAuthDto: LoginAuthDto) {
@@ -95,5 +131,9 @@ export class AuthService {
     if (!match) throw new UnauthorizedException();
 
     return 'Has iniciado sesion';
+  }
+
+  async logout() {
+    return 'logout';
   }
 }

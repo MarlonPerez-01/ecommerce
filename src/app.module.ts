@@ -26,6 +26,11 @@ import { ComentariosModule } from './comentarios/comentarios.module';
 import { CargosModule } from './cargos/cargos.module';
 import { OrdenesModule } from './ordenes/ordenes.module';
 import { AuthModule } from './auth/auth.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { CodigosModule } from './codigos/codigos.module';
+import { TipoCodigosModule } from './tipo-codigos/tipo-codigos.module';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -42,6 +47,28 @@ import { AuthModule } from './auth/auth.module';
       entities: [],
       autoLoadEntities: true,
       synchronize: process.env.NODE_ENV === 'development',
+      logging: process.env.NODE_ENV === 'development',
+    }),
+    MailerModule.forRoot({
+      transport: {
+        host: process.env.EMAIL_HOST,
+        secure: false,
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      },
+      preview: true,
+      defaults: {
+        from: process.env.EMAIL_FROM,
+      },
+      template: {
+        dir: join(process.env.PWD, 'templates'),
+        adapter: new HandlebarsAdapter(),
+        options: {
+          strict: true,
+        },
+      },
     }),
     CategoriasModule,
     ClientesModule,
@@ -65,6 +92,8 @@ import { AuthModule } from './auth/auth.module';
     CargosModule,
     OrdenesModule,
     AuthModule,
+    CodigosModule,
+    TipoCodigosModule,
   ],
   controllers: [AppController],
   providers: [AppService],

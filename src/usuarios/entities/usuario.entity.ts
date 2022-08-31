@@ -2,10 +2,12 @@ import {
   Column,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Cliente } from '../../clientes/entities/cliente.entity';
+import { Codigo } from '../../codigos/entities/codigo.entity';
 
 @Entity()
 export class Usuario {
@@ -23,4 +25,7 @@ export class Usuario {
 
   @DeleteDateColumn({ select: false })
   deletedAt: Date;
+
+  @OneToMany(() => Codigo, (codigo) => codigo.usuario)
+  codigos: string[];
 }
