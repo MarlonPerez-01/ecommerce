@@ -1,7 +1,17 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { EmpleadosService } from './empleados.service';
 import { CreateEmpleadoDto } from './dto/create-empleado.dto';
 import { UpdateEmpleadoDto } from './dto/update-empleado.dto';
+import { FindEmpleadosDto } from './dto/find-empleados.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('empleados')
@@ -15,8 +25,8 @@ export class EmpleadosController {
   }
 
   @Get()
-  findAll() {
-    return this.empleadosService.findAll();
+  findAll(@Query() findEmpleadosDTO: FindEmpleadosDto) {
+    return this.empleadosService.findAll(findEmpleadosDTO);
   }
 
   @Get(':id')
@@ -25,7 +35,10 @@ export class EmpleadosController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() updateEmpleadoDto: UpdateEmpleadoDto) {
+  update(
+    @Param('id') id: number,
+    @Body() updateEmpleadoDto: UpdateEmpleadoDto,
+  ) {
     return this.empleadosService.update(id, updateEmpleadoDto);
   }
 

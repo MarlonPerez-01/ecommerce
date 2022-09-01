@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateEmpleadoDto } from './dto/create-empleado.dto';
 import { UpdateEmpleadoDto } from './dto/update-empleado.dto';
+import { FindEmpleadosDto } from './dto/find-empleados.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Empleado } from './entities/empleado.entity';
 import { Repository } from 'typeorm';
-import { Persona } from '../personas/entities/persona.entity';
+import { paginate } from '../common/helpers/paginate';
 
 @Injectable()
 export class EmpleadosService {
@@ -18,19 +19,37 @@ export class EmpleadosService {
     return this.empleadoRepository.save(empleado);
   }
 
-  findAll() {
-    return `This action returns all empleados`;
+  async findAll(findEmpleadosDTO: FindEmpleadosDto) {
+    const { page, limit, sort, order } = findEmpleadosDTO;
+
+    const skip = (page - 1) * limit;
+
+    const [data, totalItems] = await this.empleadoRepository.findAndCount({
+      take: limit,
+      skip,
+      order: { [sort]: order },
+    });
+
+    const pagination = paginate(page, limit, totalItems);
+
+    return {
+      data,
+      totalItems,
+      ...pagination,
+    };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} empleado`;
+  async findOne(id: number) {
+    const empleado = this.empleadoRepository.findOneBy({ id });
+    if (!empleado) throw new NotFoundException();
+    return empleado;
   }
 
-  update(id: number, updateEmpleadoDto: UpdateEmpleadoDto) {
+  async update(id: number, updateEmpleadoDto: UpdateEmpleadoDto) {
     return `This action updates a #${id} empleado`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} empleado`;
+  async remove(id: number) {
+    return this.empleadoRepository.softDelete(id);
   }
 }
