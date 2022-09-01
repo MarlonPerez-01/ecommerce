@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   UnauthorizedException,
@@ -8,23 +9,30 @@ import { DataSource, QueryRunner, Repository } from 'typeorm';
 import { Usuario } from '../usuarios/entities/usuario.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RegisterAuthDto } from './dto/register-auth.dto';
-import { LoginAuthDto } from './dto/login-auth.dto';
 import { Cliente } from '../clientes/entities/cliente.entity';
 import { Persona } from '../personas/entities/persona.entity';
 import { EmailsService } from '../emails/emails.service';
 import { Codigo } from '../codigos/entities/codigo.entity';
+import { Token } from '../tokens/entities/token.entity';
 import { addMinutes } from '../common/helpers/Date';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(Usuario)
     private readonly usuariosRepository: Repository<Usuario>,
+    @InjectRepository(Token)
+    private readonly tokenRepository: Repository<Token>,
+    private readonly jwtService: JwtService,
     private readonly emailsService: EmailsService,
     private readonly dataSource: DataSource,
   ) {}
 
   async signup(registerAuthDto: RegisterAuthDto) {
+    const usuario = await this.findUsuarioByCorreo(registerAuthDto.correo);
+    if (usuario) throw new BadRequestException('El correo ya existe');
+
     const queryRunner = this.dataSource.createQueryRunner();
 
     await queryRunner.connect();
@@ -71,6 +79,12 @@ export class AuthService {
     }
   }
 
+  private async findUsuarioByCorreo(correo: string) {
+    return this.usuariosRepository.findOne({
+      where: { correo },
+    });
+  }
+
   private async createUsuario(
     usuario: Partial<Usuario>,
     queryRunner: QueryRunner,
@@ -114,26 +128,42 @@ export class AuthService {
       codigo: codigo.toString(),
       tipo: 'correo',
       usuarioId: usuario.id,
-      fechaExpiracion: addMinutes(new Date(), 15),
+      fechaExpiraciaon: addMinutes(new Date(), 15),
     });
   }
 
-  async login(loginAuthDto: LoginAuthDto) {
-    const usuario = await this.usuariosRepository.findOne({
-      where: { correo: loginAuthDto.correo },
+  async validateUser(username: string, password: string): Promise<any> {
+    const user = await this.usuariosRepository.findOne({
+      where: { correo: username },
     });
 
-    const match = await bcrypt.compare(
-      loginAuthDto.contrasenia,
-      usuario.contrasenia,
-    );
+    const match = await this.verifyContrasenia(password, user.contrasenia);
 
+    if (!match) {
+      return null;
+    }
+
+    const { contrasenia, ...result } = user;
+    return result;
+  }
+
+  async verifyContrasenia(plain: string, hash: string) {
+    const match = await bcrypt.compare(plain, hash);
     if (!match) throw new UnauthorizedException();
+    return true;
+  }
 
-    return 'Has iniciado sesion';
+  public getCookieWithJwtToken(id: number) {
+    const payload: TokenPayload = { id };
+    const token = this.jwtService.sign(payload);
+    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${process.env.JWT_EXPIRATION_TIME}s}`;
   }
 
   async logout() {
     return 'logout';
+  }
+
+  async refreshToken() {
+    return 'refresh';
   }
 }

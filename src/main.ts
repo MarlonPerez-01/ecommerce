@@ -2,9 +2,11 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.use(cookieParser());
 
   app.setGlobalPrefix('/api/v1');
 
@@ -21,7 +23,9 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Ecommerce API')
-    .setDescription('API para utilizar tienda en linea y administrar inventario')
+    .setDescription(
+      'API para utilizar tienda en linea y administrar inventario',
+    )
     .setVersion('1.0')
     .setBasePath('/api/v1')
     .build();
