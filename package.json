@@ -33,6 +33,7 @@
     "@nestjs/typeorm": "^9.0.1",
     "@types/cookie-parser": "^1.4.3",
     "@types/passport-local": "^1.0.34",
+    "argon2": "^0.29.1",
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",

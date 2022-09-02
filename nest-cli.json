@@ -3,12 +3,12 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
+    "plugins": [
+      "@nestjs/swagger"
+    ],
     "assets": [
       "emails/templates/**/*.hbs"
     ],
     "watchAssets": true
-  },
-  "plugins": [
-    "@nestjs/swagger"
-  ]
+  }
 }
