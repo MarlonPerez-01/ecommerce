@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { paginate } from 'src/common/helpers/paginate';
 import { Like, Repository } from 'typeorm';
 import { CreateProveedorDto } from './dto/create-proveedor.dto';
 import { FindProveedoresDto } from './dto/find-proveedores.dto';
 import { UpdateProveedorDto } from './dto/update-proveedor.dto';
 import { Proveedor } from './entities/proveedor.entity';
+import { paginate } from '../common/helpers/paginate';
 
 @Injectable()
 export class ProveedoresService {

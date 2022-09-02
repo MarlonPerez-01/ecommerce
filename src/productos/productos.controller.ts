@@ -17,8 +17,8 @@ import { ProductosService } from './productos.service';
 import { CreateProductoDto } from './dto/create-producto.dto';
 import { UpdateProductoDto } from './dto/update-producto.dto';
 import { FindProductosDTO } from './dto/find-productos.dto';
-import LocalFileInterceptor from 'src/local-file/interceptors/local-file.interceptor';
 import { ApiTags } from '@nestjs/swagger';
+import LocalFileInterceptor from '../local-file/interceptors/local-file.interceptor';
 
 @ApiTags('productos')
 @Controller('productos')
@@ -71,7 +71,7 @@ export class ProductosController {
         ],
       }),
     )
-      file: Express.Multer.File,
+    file: Express.Multer.File,
   ) {
     return { fileName: file.filename };
   }

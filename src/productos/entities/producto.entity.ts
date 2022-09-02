@@ -1,6 +1,3 @@
-import { Categoria } from 'src/categorias/entities/categoria.entity';
-import { Marca } from 'src/marcas/entities/marca.entity';
-import { Proveedor } from 'src/proveedores/entities/proveedor.entity';
 import { Descuento } from '../../descuentos/entities/descuento.entity';
 import {
   Column,
@@ -11,6 +8,9 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Marca } from '../../marcas/entities/marca.entity';
+import { Categoria } from '../../categorias/entities/categoria.entity';
+import { Proveedor } from '../../proveedores/entities/proveedor.entity';
 
 @Entity()
 export class Producto {

@@ -3,12 +3,12 @@ import { ProductosService } from './productos.service';
 import { ProductosController } from './productos.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Producto } from './entities/producto.entity';
-import { MarcasModule } from 'src/marcas/marcas.module';
-import { CategoriasModule } from 'src/categorias/categorias.module';
-import { Marca } from 'src/marcas/entities/marca.entity';
-import { Categoria } from 'src/categorias/entities/categoria.entity';
-import { ProveedoresModule } from 'src/proveedores/proveedores.module';
-import { Proveedor } from 'src/proveedores/entities/proveedor.entity';
+import { Marca } from '../marcas/entities/marca.entity';
+import { Categoria } from '../categorias/entities/categoria.entity';
+import { Proveedor } from '../proveedores/entities/proveedor.entity';
+import { MarcasModule } from '../marcas/marcas.module';
+import { CategoriasModule } from '../categorias/categorias.module';
+import { ProveedoresModule } from '../proveedores/proveedores.module';
 
 @Module({
   controllers: [ProductosController],

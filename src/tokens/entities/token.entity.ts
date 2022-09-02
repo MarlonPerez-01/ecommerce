@@ -23,6 +23,6 @@ export class Token {
   @Column()
   token: string;
 
-  @DeleteDateColumn()
+  @DeleteDateColumn({ select: false })
   deletedAt: Date;
 }

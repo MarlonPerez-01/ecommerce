@@ -1,4 +1,3 @@
-import { Producto } from 'src/productos/entities/producto.entity';
 import {
   Column,
   DeleteDateColumn,
@@ -7,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Length } from 'class-validator';
+import { Producto } from '../../productos/entities/producto.entity';
 
 @Entity()
 export class Categoria {

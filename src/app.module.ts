@@ -30,6 +30,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { CodigosModule } from './codigos/codigos.module';
 import { TipoCodigosModule } from './tipo-codigos/tipo-codigos.module';
+import { DetalleOrdenesModule } from './detalle-ordenes/detalle-ordenes.module';
 import { join } from 'path';
 
 @Module({
@@ -94,6 +95,7 @@ import { join } from 'path';
     AuthModule,
     CodigosModule,
     TipoCodigosModule,
+    DetalleOrdenesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
