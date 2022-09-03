@@ -1,15 +1,16 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Usuario } from '../usuarios/entities/usuario.entity';
-import { EmailsModule } from '../emails/emails.module';
-import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { LocalStrategy } from './strategies/local.strategy';
+import { PassportModule } from '@nestjs/passport';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { EmailsModule } from '../emails/emails.module';
 import { Token } from '../tokens/entities/token.entity';
+import { Usuario } from '../usuarios/entities/usuario.entity';
 import { UsuariosService } from '../usuarios/usuarios.service';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
 import { AccessTokenStrategy } from './strategies/access-token.strategy';
+import { LocalStrategy } from './strategies/local.strategy';
 import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
 
 @Module({

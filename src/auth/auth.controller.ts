@@ -1,20 +1,14 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+
+import { Usuario } from '../usuarios/entities/usuario.entity';
 import { AuthService } from './auth.service';
+import { GetUsuarioActual } from './decorators/get-usuario-actual.decorator';
+import { RefreshAuthDto } from './dto/refresh-auth.dto';
 import { RegisterAuthDto } from './dto/register-auth.dto';
+import { AccessTokenGuard } from './guards/access-token.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { RefreshTokenGuard } from './guards/refresh-token.guard';
-import { GetUsuarioActual } from './decorators/get-usuario-actual.decorator';
-import { Usuario } from '../usuarios/entities/usuario.entity';
-import { AccessTokenGuard } from './guards/access-token.guard';
-import { RefreshAuthDto } from './dto/refresh-auth.dto';
 
 @ApiTags('auth')
 @Controller('auth')

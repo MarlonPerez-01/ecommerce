@@ -1,24 +1,23 @@
 import * as bcrypt from 'bcrypt';
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { JwtService } from '@nestjs/jwt';
 import { DataSource, QueryRunner, Repository } from 'typeorm';
+
+import {
+    BadRequestException, Injectable, InternalServerErrorException, NotFoundException,
+    UnauthorizedException
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+
 import { Cliente } from '../clientes/entities/cliente.entity';
 import { Codigo } from '../codigos/entities/codigo.entity';
+import { addMinutes } from '../common/helpers/Date';
 import { EmailsService } from '../emails/emails.service';
 import { Persona } from '../personas/entities/persona.entity';
 import { Token } from '../tokens/entities/token.entity';
 import { Usuario } from '../usuarios/entities/usuario.entity';
-import { RegisterAuthDto } from './dto/register-auth.dto';
-import { addMinutes } from '../common/helpers/Date';
-import { JwtRefreshPayload } from './interfaces/jwt-refresh.interface';
 import { RefreshAuthDto } from './dto/refresh-auth.dto';
+import { RegisterAuthDto } from './dto/register-auth.dto';
+import { JwtRefreshPayload } from './interfaces/jwt-refresh.interface';
 
 @Injectable()
 export class AuthService {
