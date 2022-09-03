@@ -1,26 +1,112 @@
-import { Injectable } from '@nestjs/common';
-import { CreateCarritoDto } from './dto/create-carrito.dto';
-import { UpdateCarritoDto } from './dto/update-carrito.dto';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+import { DetalleCarritosService } from '../detalle-carritos/detalle-carritos.service';
+import { Usuario } from '../usuarios/entities/usuario.entity';
+import { AddProductoDto } from './dto/add-producto.dto';
+import { UpdateProductoCarritoDto } from './dto/update-producto-carrito.dto';
+import { Carrito } from './entities/carrito.entity';
 
 @Injectable()
 export class CarritoService {
-  create(createCarritoDto: CreateCarritoDto) {
-    return 'This action adds a new carrito';
+  constructor(
+    @InjectRepository(Carrito)
+    private readonly carritoRepository: Repository<Carrito>,
+    private readonly detalleCarritoService: DetalleCarritosService,
+  ) {}
+
+  async create(usuario: Usuario) {
+    const carrito = await this.carritoRepository.findOne({
+      where: { usuario: { id: usuario.id } },
+    });
+
+    if (carrito) throw new BadRequestException('El carrito ya existe');
+
+    return this.carritoRepository.save({ usuario });
   }
 
-  findAll() {
-    return `This action returns all carrito`;
+  async addProducto(
+    carritoId: number,
+    usuarioId: number,
+    addProductoDto: AddProductoDto,
+  ) {
+    // Agregar producto a detalleCarrito si no existe el producto en el carrito del usuario
+
+    // TODO: optimizar query
+    const carrito = await this.carritoRepository.findOne({
+      where: { usuario: { id: usuarioId }, id: carritoId },
+      relations: ['detalleCarritos', 'detalleCarritos.producto'],
+    });
+
+    if (!carrito) throw new BadRequestException('El carrito no existe');
+
+    const producto = carrito?.detalleCarritos?.find(
+      (detalleCarrito) =>
+        detalleCarrito.productoId === addProductoDto.productoId,
+    );
+
+    if (producto)
+      throw new BadRequestException('El producto ya existe en el carrito');
+
+    // TODO: validar que exista producto con el id enviado
+
+    await this.detalleCarritoService.create(addProductoDto, carrito);
+
+    return carrito;
+  }
+
+  async findByUsuarioId(usuarioId: number) {
+    // TODO: optimizar query
+    return this.carritoRepository.findOne({
+      where: { usuario: { id: usuarioId } },
+      relations: ['detalleCarritos', 'detalleCarritos.producto'],
+    });
   }
 
   findOne(id: number) {
     return `This action returns a #${id} carrito`;
   }
 
-  update(id: number, updateCarritoDto: UpdateCarritoDto) {
-    return `This action updates a #${id} carrito`;
+  async findOneByIdUsuario(id: number) {
+    return this.carritoRepository.findOne({ where: { usuario: { id } } });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} carrito`;
+  async update(
+    carritoId: number,
+    productoId: number,
+    usuarioId: number,
+    updateCarritoDto: UpdateProductoCarritoDto,
+  ) {
+    // Obtengo el carrito del usuario actual si existe
+    const carrito = await this.carritoRepository.findOneBy({
+      usuario: { id: usuarioId },
+      id: carritoId,
+    });
+
+    if (!carrito) throw new BadRequestException('El carrito no existe');
+
+    return this.detalleCarritoService.update(
+      carritoId,
+      productoId,
+      updateCarritoDto,
+    );
+  }
+
+  async removeByProductoId(
+    carritoId: number,
+    productoId: number,
+    usuarioId: number,
+  ) {
+    // Obtengo el carrito del usuario actual si existe
+    const carrito = await this.carritoRepository.findOneBy({
+      usuario: { id: usuarioId },
+      id: carritoId,
+    });
+
+    if (!carrito) throw new BadRequestException('El carrito no existe');
+
+    console.log();
+    return this.detalleCarritoService.removeByProductoId(productoId, carritoId);
   }
 }

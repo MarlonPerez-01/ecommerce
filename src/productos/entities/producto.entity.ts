@@ -1,15 +1,18 @@
-import { Descuento } from '../../descuentos/entities/descuento.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Marca } from '../../marcas/entities/marca.entity';
+
 import { Categoria } from '../../categorias/entities/categoria.entity';
+import { Descuento } from '../../descuentos/entities/descuento.entity';
+import { DetalleCarrito } from '../../detalle-carritos/entities/detalle-carrito.entity';
+import { Marca } from '../../marcas/entities/marca.entity';
 import { Proveedor } from '../../proveedores/entities/proveedor.entity';
 
 @Entity()
@@ -33,6 +36,9 @@ export class Producto {
     cascade: ['insert'],
   })
   categoria: Categoria;
+
+  @OneToMany(() => DetalleCarrito, (detalleCarrito) => detalleCarrito.producto)
+  detalleCarritos: DetalleCarrito[];
 
   @OneToOne(() => Proveedor, { nullable: true })
   @JoinColumn()

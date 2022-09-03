@@ -3,13 +3,14 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateCategoriaDto } from './dto/create-categoria.dto';
-import { UpdateCategoriaDto } from './dto/update-categoria.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Categoria } from './entities/categoria.entity';
 import { Repository } from 'typeorm';
-import { FindCategoriasDto } from './dto/find-categorias.dto';
+
 import { paginate } from '../common/helpers/paginate';
+import { CreateCategoriaDto } from './dto/create-categoria.dto';
+import { FindCategoriasDto } from './dto/find-categorias.dto';
+import { UpdateCategoriaDto } from './dto/update-categoria.dto';
+import { Categoria } from './entities/categoria.entity';
 
 @Injectable()
 export class CategoriasService {
@@ -65,8 +66,7 @@ export class CategoriasService {
   }
 
   async remove(id: number) {
-    const categoria = await this.findOne(id);
-    return this.categoriaRepository.softDelete(categoria);
+    return this.categoriaRepository.softDelete(id);
   }
 
   async getByNombre(nombre: string) {

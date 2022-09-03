@@ -4,16 +4,16 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-
 import { Repository } from 'typeorm';
+
+import { Categoria } from '../categorias/entities/categoria.entity';
+import { paginate } from '../common/helpers/paginate';
+import { Marca } from '../marcas/entities/marca.entity';
+import { Proveedor } from '../proveedores/entities/proveedor.entity';
 import { CreateProductoDto } from './dto/create-producto.dto';
 import { FindProductosDTO } from './dto/find-productos.dto';
 import { UpdateProductoDto } from './dto/update-producto.dto';
 import { Producto } from './entities/producto.entity';
-import { Marca } from '../marcas/entities/marca.entity';
-import { Categoria } from '../categorias/entities/categoria.entity';
-import { Proveedor } from '../proveedores/entities/proveedor.entity';
-import { paginate } from '../common/helpers/paginate';
 
 @Injectable()
 export class ProductosService {
@@ -115,8 +115,8 @@ export class ProductosService {
   }
 
   async remove(id: number) {
-    const producto = await this.findOne(id);
-    return this.productoRepository.softDelete(producto);
+    // const producto = await this.findOne(id);
+    return this.productoRepository.softDelete(id);
   }
 
   private async preloadMarcaByNombre(nombre: string): Promise<Marca> {

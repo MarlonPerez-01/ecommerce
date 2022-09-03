@@ -1,12 +1,25 @@
 import { Module } from '@nestjs/common';
-import { configuration } from './config/configuration';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { join } from 'path';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
+import { CargosModule } from './cargos/cargos.module';
+import { CarritoModule } from './carrito/carrito.module';
 import { CategoriasModule } from './categorias/categorias.module';
 import { ClientesModule } from './clientes/clientes.module';
-import { ConfigModule } from '@nestjs/config';
+import { CodigosModule } from './codigos/codigos.module';
+import { ComentariosModule } from './comentarios/comentarios.module';
+import { configuration } from './config/configuration';
+import { CuponesModule } from './cupones/cupones.module';
 import { DepartamentosModule } from './departamentos/departamentos.module';
 import { DescuentosModule } from './descuentos/descuentos.module';
+import { DetalleCarritosModule } from './detalle-carritos/detalle-carritos.module';
+import { DetalleOrdenesModule } from './detalle-ordenes/detalle-ordenes.module';
 import { DetallePedidosModule } from './detalle-pedidos/detalle-pedidos.module';
 import { DireccionesModule } from './direcciones/direcciones.module';
 import { EmpleadosModule } from './empleados/empleados.module';
@@ -14,24 +27,14 @@ import { InventariosModule } from './inventarios/inventarios.module';
 import { LocalFileModule } from './local-file/local-file.module';
 import { MarcasModule } from './marcas/marcas.module';
 import { MunicipiosModule } from './municipios/municipios.module';
+import { OrdenesModule } from './ordenes/ordenes.module';
 import { PedidosModule } from './pedidos/pedidos.module';
 import { PersonasModule } from './personas/personas.module';
 import { ProductosModule } from './productos/productos.module';
 import { ProveedoresModule } from './proveedores/proveedores.module';
-import { TipoUsuariosModule } from './tipo-usuarios/tipo-usuarios.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsuariosModule } from './usuarios/usuarios.module';
-import { CuponesModule } from './cupones/cupones.module';
-import { ComentariosModule } from './comentarios/comentarios.module';
-import { CargosModule } from './cargos/cargos.module';
-import { OrdenesModule } from './ordenes/ordenes.module';
-import { AuthModule } from './auth/auth.module';
-import { MailerModule } from '@nestjs-modules/mailer';
-import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
-import { CodigosModule } from './codigos/codigos.module';
 import { TipoCodigosModule } from './tipo-codigos/tipo-codigos.module';
-import { DetalleOrdenesModule } from './detalle-ordenes/detalle-ordenes.module';
-import { join } from 'path';
+import { TipoUsuariosModule } from './tipo-usuarios/tipo-usuarios.module';
+import { UsuariosModule } from './usuarios/usuarios.module';
 
 @Module({
   imports: [
@@ -96,6 +99,8 @@ import { join } from 'path';
     CodigosModule,
     TipoCodigosModule,
     DetalleOrdenesModule,
+    DetalleCarritosModule,
+    CarritoModule,
   ],
   controllers: [AppController],
   providers: [AppService],

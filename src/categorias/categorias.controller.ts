@@ -1,9 +1,19 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+
 import { CategoriasService } from './categorias.service';
 import { CreateCategoriaDto } from './dto/create-categoria.dto';
-import { UpdateCategoriaDto } from './dto/update-categoria.dto';
 import { FindCategoriasDto } from './dto/find-categorias.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { UpdateCategoriaDto } from './dto/update-categoria.dto';
 
 @ApiTags('categorias')
 @Controller('categorias')

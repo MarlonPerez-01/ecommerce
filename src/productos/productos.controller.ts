@@ -13,12 +13,13 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { ProductosService } from './productos.service';
-import { CreateProductoDto } from './dto/create-producto.dto';
-import { UpdateProductoDto } from './dto/update-producto.dto';
-import { FindProductosDTO } from './dto/find-productos.dto';
 import { ApiTags } from '@nestjs/swagger';
+
 import LocalFileInterceptor from '../local-file/interceptors/local-file.interceptor';
+import { CreateProductoDto } from './dto/create-producto.dto';
+import { FindProductosDTO } from './dto/find-productos.dto';
+import { UpdateProductoDto } from './dto/update-producto.dto';
+import { ProductosService } from './productos.service';
 
 @ApiTags('productos')
 @Controller('productos')
@@ -66,7 +67,7 @@ export class ProductosController {
         validators: [
           new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 5 }),
           new FileTypeValidator({
-            fileType: new RegExp(/\png|jpe?g|svg/i),
+            fileType: new RegExp('(jpe?g|png|gif)$'),
           }),
         ],
       }),
