@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTokenDto } from './dto/create-token.dto';
 import { UpdateTokenDto } from './dto/update-token.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Token } from './entities/token.entity';
-import { Repository } from 'typeorm';
 
 @Injectable()
 export class TokensService {

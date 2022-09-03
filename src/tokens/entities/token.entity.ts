@@ -3,7 +3,7 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Usuario } from '../../usuarios/entities/usuario.entity';
@@ -16,7 +16,7 @@ export class Token {
   @Column()
   idUsuario: number;
 
-  @OneToOne(() => Usuario)
+  @ManyToOne(() => Usuario, (usuario) => usuario.tokens)
   @JoinColumn({ name: 'idUsuario' })
   usuario: Usuario;
 
