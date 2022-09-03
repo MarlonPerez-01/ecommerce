@@ -1,11 +1,20 @@
-import { Body, Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { RegisterAuthDto } from './dto/register-auth.dto';
-import { RequestWithUser } from './interfaces/requestWithUser.interface';
-import { LocalAuthenticationGuard } from './guards/local-authentication.guard';
-import { Response } from 'express';
-import { LoginAuthDto } from './dto/login-auth.dto';
+import { LocalAuthGuard } from './guards/local-auth.guard';
+import { RefreshTokenGuard } from './guards/refresh-token.guard';
+import { GetUsuarioActual } from './decorators/get-usuario-actual.decorator';
+import { Usuario } from '../usuarios/entities/usuario.entity';
+import { AccessTokenGuard } from './guards/access-token.guard';
+import { RefreshAuthDto } from './dto/refresh-auth.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -17,27 +26,53 @@ export class AuthController {
     return this.authService.signup(signupAuthDto);
   }
 
-  @UseGuards(LocalAuthenticationGuard)
+  @UseGuards(LocalAuthGuard)
   @Post('login')
-  login(
-    @Body() loginAuthDto: LoginAuthDto,
-    @Req() request: RequestWithUser,
-    @Res() response: Response,
+  login(@GetUsuarioActual() usuario: Usuario) {
+    return this.authService.login(usuario);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Get('me')
+  async getUsuario(@GetUsuarioActual() usuario: Usuario) {
+    return this.authService.getUsuarioById(usuario.id);
+  }
+
+  @UseGuards(RefreshTokenGuard)
+  @Post('refresh-token')
+  async refresh(
+    @Body() refreshAuthDto: RefreshAuthDto,
+    @GetUsuarioActual() usuario: Usuario,
   ) {
-    const { user } = request;
-    user.contrasenia = undefined;
-    const cookie = this.authService.getCookieWithJwtToken(user.id);
-    response.setHeader('Set-Cookie', cookie);
-    return response.send(user);
+    const accessToken = await this.authService.refreshToken(refreshAuthDto);
+    return { accessToken, refreshToken: refreshAuthDto.refreshToken };
   }
 
-  @Post('refresh')
-  refresh() {
-    return this.authService.refreshToken();
-  }
-
+  @HttpCode(204)
+  @UseGuards(AccessTokenGuard)
   @Post('logout')
-  logout() {
-    return this.authService.logout();
+  async logout(@GetUsuarioActual() usuario: Usuario) {
+    await this.authService.logout(usuario.id);
+    return null;
+  }
+
+  @Post('confirm-account')
+  async confirmAccount(@Body() confirmAccountDto: { codigo: string }) {
+    return 'account confirmed';
+  }
+
+  @Post('resend-confirmation-email')
+  async resendConfirmationEmail() {
+    return 'resend confirmation email';
+  }
+
+  @Post('reset-password')
+  async resetPassword() {
+    return 'reset password';
+  }
+
+  @Post('forgot-password')
+  async forgotPassword() {
+    return 'reset password';
   }
 }
