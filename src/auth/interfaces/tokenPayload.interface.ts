@@ -1,3 +1,0 @@
-interface TokenPayload {
-  id: number;
-}
