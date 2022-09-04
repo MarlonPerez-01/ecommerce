@@ -17,12 +17,9 @@ export class Empleado {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => Persona, { nullable: false })
+  @OneToOne(() => Persona, { nullable: false, cascade: ['insert', 'update'] })
   @JoinColumn()
   persona: Persona;
-
-  @Column()
-  cargoId: number;
 
   @ManyToOne(() => Cargo, (cargo) => cargo.empleados)
   cargo: Cargo;

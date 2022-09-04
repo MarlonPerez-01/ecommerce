@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+
 import { DireccionesService } from './direcciones.service';
 import { CreateDireccionDto } from './dto/create-direccion.dto';
 import { UpdateDireccionDto } from './dto/update-direccion.dto';
@@ -8,8 +17,8 @@ export class DireccionesController {
   constructor(private readonly direccionesService: DireccionesService) {}
 
   @Post()
-  create(@Body() createDireccioneDto: CreateDireccionDto) {
-    return this.direccionesService.create(createDireccioneDto);
+  create(@Body() createDireccionDto: CreateDireccionDto) {
+    return this.direccionesService.create(createDireccionDto);
   }
 
   @Get()
@@ -23,8 +32,11 @@ export class DireccionesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() updateDireccioneDto: UpdateDireccionDto) {
-    return this.direccionesService.update(id, updateDireccioneDto);
+  update(
+    @Param('id') id: number,
+    @Body() updateDireccionDto: UpdateDireccionDto,
+  ) {
+    return this.direccionesService.update(id, updateDireccionDto);
   }
 
   @Delete(':id')

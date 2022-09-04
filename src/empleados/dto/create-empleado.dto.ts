@@ -1,5 +1,6 @@
 import {
   IsDate,
+  IsIn,
   IsNumber,
   IsOptional,
   IsPositive,
@@ -32,9 +33,11 @@ export class CreateEmpleadoDto {
   telefono: number;
 
   @IsNumber()
+  @IsPositive()
   salario: number;
 
   @IsString()
+  @IsIn(['M', 'F'])
   genero: string;
 
   @IsDate()

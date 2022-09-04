@@ -1,26 +1,36 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
 import { CreateDireccionDto } from './dto/create-direccion.dto';
 import { UpdateDireccionDto } from './dto/update-direccion.dto';
+import { Direccion } from './entities/direccion.entity';
 
 @Injectable()
 export class DireccionesService {
-  create(createDireccioneDto: CreateDireccionDto) {
-    return 'This action adds a new direccione';
+  constructor(
+    @InjectRepository(Direccion)
+    private readonly direccionRepository: Repository<Direccion>,
+  ) {}
+
+  async create(createDireccionDto: CreateDireccionDto) {
+    const direccion = this.direccionRepository.create(createDireccionDto);
+    return this.direccionRepository.save(direccion);
   }
 
-  findAll() {
+  async findAll() {
     return `This action returns all direcciones`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} direccione`;
+  async findOne(id: number) {
+    return this.direccionRepository.findOne({ where: { id } });
   }
 
-  update(id: number, updateDireccioneDto: UpdateDireccionDto) {
+  async update(id: number, updateDireccionDto: UpdateDireccionDto) {
     return `This action updates a #${id} direccione`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} direccione`;
+  async remove(id: number) {
+    return this.direccionRepository.delete(id);
   }
 }

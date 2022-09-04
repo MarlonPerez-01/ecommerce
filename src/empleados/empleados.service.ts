@@ -56,6 +56,7 @@ export class EmpleadosService {
       take: limit,
       skip,
       order: { [sort]: order },
+      relations: ['persona', 'cargo'],
     });
 
     const pagination = paginate(page, limit, totalItems);
@@ -68,16 +69,48 @@ export class EmpleadosService {
   }
 
   async findOne(id: number) {
-    const empleado = await this.empleadoRepository.findOneBy({ id });
-    if (!empleado) throw new NotFoundException();
+    const empleado = await this.empleadoRepository.findOne({
+      where: { id },
+      relations: ['persona', 'cargo'],
+    });
+    if (!empleado) throw new NotFoundException('Empleado no encontrado');
     return empleado;
   }
 
   async update(id: number, updateEmpleadoDto: UpdateEmpleadoDto) {
-    return `This action updates a #${id} empleado`;
+    const cargo = await this.cargosService.findOne(updateEmpleadoDto.cargoId);
+    if (!cargo) throw new UnprocessableEntityException('Cargo inválido');
+
+    const empleado = await this.empleadoRepository.findOne({
+      where: { id },
+      relations: ['persona', 'cargo', 'persona.direcciones'],
+    });
+
+    if (!empleado) throw new NotFoundException('Empleado no encontrado');
+
+    const empleadoActualizado = this.empleadoRepository.merge(empleado, {
+      persona: {
+        primerNombre: updateEmpleadoDto.primerNombre,
+        segundoNombre: updateEmpleadoDto.segundoNombre,
+        primerApellido: updateEmpleadoDto.primerApellido,
+        segundoApellido: updateEmpleadoDto.segundoApellido,
+        telefono: updateEmpleadoDto.telefono,
+        direcciones: [updateEmpleadoDto.direccion],
+      },
+      cargo: {
+        id: updateEmpleadoDto.cargoId,
+      },
+      genero: updateEmpleadoDto.genero,
+      salario: updateEmpleadoDto.salario,
+      fechaNacimiento: updateEmpleadoDto.fechaNacimiento,
+    });
+
+    return this.empleadoRepository.save(empleadoActualizado);
   }
 
   async remove(id: number) {
-    return this.empleadoRepository.softDelete(id);
+    const eliminado = this.empleadoRepository.softDelete(id);
+    if (!eliminado) throw new NotFoundException('Empleado no encontrado');
+    return eliminado;
   }
 }
