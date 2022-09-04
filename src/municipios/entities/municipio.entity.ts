@@ -1,4 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+
 import { Departamento } from '../../departamentos/entities/departamento.entity';
 
 @Entity()

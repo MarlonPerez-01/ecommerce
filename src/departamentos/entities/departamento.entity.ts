@@ -1,4 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+
 import { Municipio } from '../../municipios/entities/municipio.entity';
 
 @Entity()

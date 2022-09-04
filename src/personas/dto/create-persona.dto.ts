@@ -1,25 +1,19 @@
-import {Column, DeleteDateColumn, Entity, PrimaryGeneratedColumn} from 'typeorm';
+import { IsDate, IsNumber, IsPositive, IsString } from 'class-validator';
 
-@Entity()
 export class CreatePersonaDto {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column()
+  @IsString()
   primerNombre: string;
 
-  @Column({ nullable: true })
+  @IsString()
   segundoNombre: string;
 
-  @Column()
+  @IsString()
   primerApellido: string;
 
-  @Column({ nullable: true })
+  @IsString()
   segundoApellido: string;
 
-  @Column()
+  @IsNumber()
+  @IsPositive()
   telefono: number;
-
-  @DeleteDateColumn({ select: false })
-  deletedAt: Date;
 }
