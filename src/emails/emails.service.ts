@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { UpdateEmailDto } from './dto/update-email.dto';
 import { MailerService } from '@nestjs-modules/mailer';
+
+import { UpdateEmailDto } from './dto/update-email.dto';
 
 interface ConfirmacionCorreo {
   to: string;

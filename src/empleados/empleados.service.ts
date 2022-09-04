@@ -68,7 +68,7 @@ export class EmpleadosService {
   }
 
   async findOne(id: number) {
-    const empleado = this.empleadoRepository.findOneBy({ id });
+    const empleado = await this.empleadoRepository.findOneBy({ id });
     if (!empleado) throw new NotFoundException();
     return empleado;
   }
