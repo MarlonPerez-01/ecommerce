@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
 import { CreateCargoDto } from './dto/create-cargo.dto';
 import { UpdateCargoDto } from './dto/update-cargo.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Cargo } from './entities/cargo.entity';
-import { Repository } from 'typeorm';
 
 @Injectable()
 export class CargosService {
@@ -13,7 +14,8 @@ export class CargosService {
   ) {}
 
   async create(createCargoDto: CreateCargoDto) {
-    return this.cargoRepository.create(createCargoDto);
+    const cargo = this.cargoRepository.create(createCargoDto);
+    return this.cargoRepository.save(cargo);
   }
 
   async findAll() {
@@ -22,13 +24,13 @@ export class CargosService {
 
   async findOne(id: number) {
     const cargo = this.cargoRepository.findOne({ where: { id } });
-    if (!cargo) throw new NotFoundException();
+    if (!cargo) throw new NotFoundException('Cargo no encontrado');
     return cargo;
   }
 
   async update(id: number, updateCargoDto: UpdateCargoDto) {
     const cargo = await this.cargoRepository.preload({ id, ...updateCargoDto });
-    if (!cargo) throw new NotFoundException();
+    if (!cargo) throw new NotFoundException('Cargo no encontrado');
     return this.cargoRepository.save(cargo);
   }
 

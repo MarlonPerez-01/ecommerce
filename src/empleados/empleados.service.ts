@@ -1,21 +1,49 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateEmpleadoDto } from './dto/create-empleado.dto';
-import { UpdateEmpleadoDto } from './dto/update-empleado.dto';
-import { FindEmpleadosDto } from './dto/find-empleados.dto';
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Empleado } from './entities/empleado.entity';
 import { Repository } from 'typeorm';
+
+import { CargosService } from '../cargos/cargos.service';
 import { paginate } from '../common/helpers/paginate';
+import { PersonasService } from '../personas/personas.service';
+import { CreateEmpleadoDto } from './dto/create-empleado.dto';
+import { FindEmpleadosDto } from './dto/find-empleados.dto';
+import { UpdateEmpleadoDto } from './dto/update-empleado.dto';
+import { Empleado } from './entities/empleado.entity';
 
 @Injectable()
 export class EmpleadosService {
   constructor(
     @InjectRepository(Empleado)
     private readonly empleadoRepository: Repository<Empleado>,
+    private readonly cargosService: CargosService,
+    private readonly personasService: PersonasService,
   ) {}
 
   async create(createEmpleadoDto: CreateEmpleadoDto) {
-    const empleado = this.empleadoRepository.create(createEmpleadoDto);
+    const cargo = await this.cargosService.findOne(createEmpleadoDto.cargoId);
+
+    if (!cargo) throw new UnprocessableEntityException('Cargo inválido');
+
+    const persona = await this.personasService.create({
+      primerNombre: createEmpleadoDto.primerNombre,
+      segundoNombre: createEmpleadoDto.segundoNombre,
+      primerApellido: createEmpleadoDto.primerApellido,
+      segundoApellido: createEmpleadoDto.segundoApellido,
+      telefono: createEmpleadoDto.telefono,
+    });
+
+    const empleado = this.empleadoRepository.create({
+      persona,
+      cargo,
+      genero: createEmpleadoDto.genero,
+      salario: createEmpleadoDto.salario,
+      fechaNacimiento: createEmpleadoDto.fechaNacimiento,
+    });
+
     return this.empleadoRepository.save(empleado);
   }
 

@@ -8,11 +8,12 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { EmpleadosService } from './empleados.service';
-import { CreateEmpleadoDto } from './dto/create-empleado.dto';
-import { UpdateEmpleadoDto } from './dto/update-empleado.dto';
-import { FindEmpleadosDto } from './dto/find-empleados.dto';
 import { ApiTags } from '@nestjs/swagger';
+
+import { CreateEmpleadoDto } from './dto/create-empleado.dto';
+import { FindEmpleadosDto } from './dto/find-empleados.dto';
+import { UpdateEmpleadoDto } from './dto/update-empleado.dto';
+import { EmpleadosService } from './empleados.service';
 
 @ApiTags('empleados')
 @Controller('empleados')

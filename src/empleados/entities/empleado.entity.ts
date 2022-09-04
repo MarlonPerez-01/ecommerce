@@ -4,9 +4,12 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+
+import { Cargo } from '../../cargos/entities/cargo.entity';
 import { Persona } from '../../personas/entities/persona.entity';
 
 @Entity()
@@ -18,9 +21,11 @@ export class Empleado {
   @JoinColumn()
   persona: Persona;
 
-  // TODO: cambiar la propiedad a una tabla separada
   @Column()
-  cargo: string;
+  cargoId: number;
+
+  @ManyToOne(() => Cargo, (cargo) => cargo.empleados)
+  cargo: Cargo;
 
   @Column({ type: 'decimal', precision: 6, scale: 2 })
   salario: number;

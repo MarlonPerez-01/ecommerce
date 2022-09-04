@@ -1,7 +1,18 @@
-import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsDate,
+  IsNumber,
+  IsOptional,
+  IsPositive,
+  IsString,
+} from 'class-validator';
+
 import { Direccion } from '../../direcciones/entities/direccion.entity';
 
 export class CreateEmpleadoDto {
+  @IsNumber()
+  @IsPositive()
+  cargoId: number;
+
   @IsString()
   primerNombre: string;
 
@@ -16,14 +27,15 @@ export class CreateEmpleadoDto {
   @IsString()
   segundoApellido: string;
 
+  @IsOptional()
+  @IsNumber()
+  telefono: number;
+
   @IsNumber()
   salario: number;
 
   @IsString()
   genero: string;
-
-  @IsString()
-  cargo: string;
 
   @IsDate()
   fechaNacimiento: Date;
