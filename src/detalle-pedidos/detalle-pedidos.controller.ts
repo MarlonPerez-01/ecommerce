@@ -1,12 +1,13 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
 } from '@nestjs/common';
+
 import { DetallePedidosService } from './detalle-pedidos.service';
 import { CreateDetallePedidoDto } from './dto/create-detalle-pedido.dto';
 import { UpdateDetallePedidoDto } from './dto/update-detalle-pedido.dto';

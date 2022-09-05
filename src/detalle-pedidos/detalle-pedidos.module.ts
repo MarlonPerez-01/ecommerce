@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
-import { DetallePedidosService } from './detalle-pedidos.service';
-import { DetallePedidosController } from './detalle-pedidos.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { DetallePedidosController } from './detalle-pedidos.controller';
+import { DetallePedidosService } from './detalle-pedidos.service';
 import { DetallePedido } from './entities/detalle-pedido.entity';
 
 @Module({

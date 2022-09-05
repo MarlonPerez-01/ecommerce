@@ -161,17 +161,17 @@ export class AuthService {
     // FIXME: optimizar query
     const user = await this.usuariosRepository.findOne({
       where: { correo },
-      relations: ['cliente', 'cliente.persona'],
+      relations: ['role', 'persona', 'persona.cliente'],
     });
 
-    if (!user) throw new NotFoundException();
+    if (!user) throw new NotFoundException('Usuario no encontrado');
 
     const match = await this.verifyContrasenia(
       plainContrasenia,
       user.contrasenia,
     );
 
-    if (!match) throw new UnauthorizedException();
+    if (!match) throw new UnauthorizedException('Credenciales incorrectas');
 
     user.contrasenia = undefined;
     return user;
@@ -189,6 +189,7 @@ export class AuthService {
       sub: usuario.id,
       correo: usuario.correo,
       nombre: `${usuario.persona.primerNombre} ${usuario.persona.primerApellido}`,
+      role: usuario.role.role,
     };
 
     return this.jwtService.sign(payload, {
@@ -207,7 +208,7 @@ export class AuthService {
     });
 
     const token = this.tokenRepository.create({
-      idUsuario: 1,
+      idUsuario: usuario.id,
       token: refreshToken,
     });
 
@@ -239,9 +240,9 @@ export class AuthService {
   }
 
   async getUsuarioById(id: number) {
-    return this.usuariosRepository.findOne({
+    return await this.usuariosRepository.findOne({
       where: { id },
-      relations: ['cliente', 'cliente.persona'],
+      relations: ['role', 'persona', 'persona.cliente'],
     });
   }
 

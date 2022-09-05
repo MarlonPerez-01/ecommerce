@@ -18,7 +18,7 @@ export class Cliente {
   @Column({ type: 'int', nullable: false })
   personaId: number;
 
-  @OneToOne(() => Persona)
+  @OneToOne(() => Persona, (persona) => persona.cliente)
   @JoinColumn({ name: 'personaId' })
   persona: Persona;
 

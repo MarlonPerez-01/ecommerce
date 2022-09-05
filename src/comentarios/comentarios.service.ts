@@ -1,26 +1,40 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
 import { CreateComentarioDto } from './dto/create-comentario.dto';
 import { UpdateComentarioDto } from './dto/update-comentario.dto';
+import { Comentario } from './entities/comentario.entity';
 
 @Injectable()
 export class ComentariosService {
-  create(createComentarioDto: CreateComentarioDto) {
-    return 'This action adds a new comentario';
+  constructor(
+    @InjectRepository(Comentario)
+    private readonly comentarioRepository: Repository<Comentario>,
+  ) {}
+
+  async create(createComentarioDto: CreateComentarioDto) {
+    const comentario = this.comentarioRepository.create(createComentarioDto);
+    return this.comentarioRepository.save(comentario);
   }
 
-  findAll() {
+  async findAll() {
     return `This action returns all comentarios`;
   }
 
-  findOne(id: number) {
+  async findOne(id: number) {
     return `This action returns a #${id} comentario`;
   }
 
-  update(id: number, updateComentarioDto: UpdateComentarioDto) {
+  async findByProductoId(productoId: number) {
+    return this.comentarioRepository.find({ where: { productoId } });
+  }
+
+  async update(id: number, updateComentarioDto: UpdateComentarioDto) {
     return `This action updates a #${id} comentario`;
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     return `This action removes a #${id} comentario`;
   }
 }

@@ -14,21 +14,21 @@ import { RolesService } from './roles.service';
 
 @Controller('roles')
 export class RolesController {
-  constructor(private readonly tipoUsuariosService: RolesService) {}
+  constructor(private readonly rolesService: RolesService) {}
 
   @Post()
   create(@Body() createTipoUsuarioDto: CreateRolesDto) {
-    return this.tipoUsuariosService.create(createTipoUsuarioDto);
+    return this.rolesService.create(createTipoUsuarioDto);
   }
 
   @Get()
   findAll() {
-    return this.tipoUsuariosService.findAll();
+    return this.rolesService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: number) {
-    return this.tipoUsuariosService.findOne(id);
+    return this.rolesService.findOne(id);
   }
 
   @Patch(':id')
@@ -36,11 +36,11 @@ export class RolesController {
     @Param('id') id: number,
     @Body() updateTipoUsuarioDto: UpdateRolesDto,
   ) {
-    return this.tipoUsuariosService.update(id, updateTipoUsuarioDto);
+    return this.rolesService.update(id, updateTipoUsuarioDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: number) {
-    return this.tipoUsuariosService.remove(id);
+    return this.rolesService.remove(id);
   }
 }

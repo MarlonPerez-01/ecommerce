@@ -1,4 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+
 import { Pedido } from '../../pedidos/entities/pedido.entity';
 
 @Entity()

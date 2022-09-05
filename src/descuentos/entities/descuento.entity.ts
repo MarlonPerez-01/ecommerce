@@ -1,4 +1,5 @@
 import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
+
 import { Producto } from '../../productos/entities/producto.entity';
 
 @Entity()

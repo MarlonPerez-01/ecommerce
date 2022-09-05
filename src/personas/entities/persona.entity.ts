@@ -3,9 +3,11 @@ import {
   DeleteDateColumn,
   Entity,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+import { Cliente } from '../../clientes/entities/cliente.entity';
 import { Direccion } from '../../direcciones/entities/direccion.entity';
 
 @Entity()
@@ -33,6 +35,9 @@ export class Persona {
 
   @OneToMany(() => Direccion, (direccion) => direccion.persona)
   direcciones: Direccion[];
+
+  @OneToOne(() => Cliente, (cliente) => cliente.persona)
+  cliente: Cliente;
 
   @DeleteDateColumn({ select: false })
   deletedAt: Date;
