@@ -1,9 +1,19 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { MarcasService } from './marcas.service';
-import { CreateMarcaDto } from './dto/create-marca.dto';
-import { UpdateMarcaDto } from './dto/update-marca.dto';
-import { FindMarcasDto } from './dto/find-marcas.dto';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+
+import { CreateMarcaDto } from './dto/create-marca.dto';
+import { FindMarcasDto } from './dto/find-marcas.dto';
+import { UpdateMarcaDto } from './dto/update-marca.dto';
+import { MarcasService } from './marcas.service';
 
 @ApiTags('marcas')
 @Controller('marcas')

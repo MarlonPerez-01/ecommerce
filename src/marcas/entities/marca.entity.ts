@@ -1,3 +1,4 @@
+import { Length } from 'class-validator';
 import {
   Column,
   DeleteDateColumn,
@@ -5,7 +6,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Length } from 'class-validator';
+
 import { Producto } from '../../productos/entities/producto.entity';
 
 @Entity()

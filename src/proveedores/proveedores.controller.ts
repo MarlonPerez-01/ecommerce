@@ -1,9 +1,19 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { ProveedoresService } from './proveedores.service';
-import { CreateProveedorDto } from './dto/create-proveedor.dto';
-import { UpdateProveedorDto } from './dto/update-proveedor.dto';
-import { FindProveedoresDto } from './dto/find-proveedores.dto';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+
+import { CreateProveedorDto } from './dto/create-proveedor.dto';
+import { FindProveedoresDto } from './dto/find-proveedores.dto';
+import { UpdateProveedorDto } from './dto/update-proveedor.dto';
+import { ProveedoresService } from './proveedores.service';
 
 @ApiTags('proveedores')
 @Controller('proveedores')

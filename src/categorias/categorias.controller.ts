@@ -47,4 +47,14 @@ export class CategoriasController {
   remove(@Param('id') id: number) {
     return this.categoriasService.remove(id);
   }
+
+  @Post(':id/image')
+  uploadImage(@Param('id') id: number, @Body() image: string) {
+    return 'upload image';
+  }
+
+  @Delete(':id/image')
+  deleteImage(@Param('id') id: number, @Body() image: string) {
+    return 'delete image';
+  }
 }

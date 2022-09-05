@@ -1,9 +1,9 @@
-import { extname } from 'path';
+import { Injectable, mixin, NestInterceptor, Type } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 import { randomUUID } from 'crypto';
 import { diskStorage } from 'multer';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { Injectable, mixin, NestInterceptor, Type } from '@nestjs/common';
-import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
+import { extname } from 'path';
 
 interface LocalFileInterceptorOptions {
   fieldName: string;

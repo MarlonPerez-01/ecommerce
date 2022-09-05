@@ -6,8 +6,9 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Proveedor } from '../../proveedores/entities/proveedor.entity';
+
 import { DetallePedido } from '../../detalle-pedidos/entities/detalle-pedido.entity';
+import { Proveedor } from '../../proveedores/entities/proveedor.entity';
 
 @Entity()
 export class Pedido {

@@ -5,11 +5,12 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateMarcaDto } from './dto/create-marca.dto';
-import { UpdateMarcaDto } from './dto/update-marca.dto';
-import { FindMarcasDto } from './dto/find-marcas.dto';
-import { Marca } from './entities/marca.entity';
+
 import { paginate } from '../common/helpers/paginate';
+import { CreateMarcaDto } from './dto/create-marca.dto';
+import { FindMarcasDto } from './dto/find-marcas.dto';
+import { UpdateMarcaDto } from './dto/update-marca.dto';
+import { Marca } from './entities/marca.entity';
 
 @Injectable()
 export class MarcasService {
@@ -65,8 +66,8 @@ export class MarcasService {
   }
 
   async remove(id: number) {
-    const marca = await this.findOne(id);
-    return this.marcasRepository.softDelete(marca);
+    // const marca = await this.findOne(id);
+    return this.marcasRepository.softDelete(id);
   }
 
   async getByNombre(nombre: string) {

@@ -1,8 +1,17 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
-import { PedidosService } from './pedidos.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+
 import { CreatePedidoDto } from './dto/create-pedido.dto';
 import { UpdatePedidoDto } from './dto/update-pedido.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { PedidosService } from './pedidos.service';
 
 @ApiTags('pedidos')
 @Controller('pedidos')
