@@ -1,10 +1,13 @@
 import {
   Column,
   DeleteDateColumn,
-  Entity, JoinColumn, OneToOne,
+  Entity,
+  JoinColumn,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import {Persona} from '../../personas/entities/persona.entity';
+
+import { Persona } from '../../personas/entities/persona.entity';
 
 @Entity()
 export class CreateClienteDto {

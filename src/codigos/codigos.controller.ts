@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+
 import { CodigosService } from './codigos.service';
 import { CreateCodigoDto } from './dto/create-codigo.dto';
 import { UpdateCodigoDto } from './dto/update-codigo.dto';

@@ -1,18 +1,22 @@
-import * as bcrypt from 'bcrypt';
-import { DataSource, QueryRunner, Repository } from 'typeorm';
-
 import {
-    BadRequestException, Injectable, InternalServerErrorException, NotFoundException,
-    UnauthorizedException
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
+import { DataSource, QueryRunner, Repository } from 'typeorm';
 
 import { Cliente } from '../clientes/entities/cliente.entity';
 import { Codigo } from '../codigos/entities/codigo.entity';
+import { RoleEnum } from '../common/enums/role.enum';
 import { addMinutes } from '../common/helpers/Date';
 import { EmailsService } from '../emails/emails.service';
 import { Persona } from '../personas/entities/persona.entity';
+import { Role } from '../roles/entities/roles.entity';
 import { Token } from '../tokens/entities/token.entity';
 import { Usuario } from '../usuarios/entities/usuario.entity';
 import { RefreshAuthDto } from './dto/refresh-auth.dto';
@@ -50,14 +54,14 @@ export class AuthService {
     await queryRunner.startTransaction();
 
     try {
-      const usuario = await this.createUsuario(
-        {
-          correo: registerAuthDto.correo,
-          contrasenia: registerAuthDto.contrasenia,
+      // Obtener rol de cliente
+      const role = await queryRunner.manager.findOne(Role, {
+        where: {
+          role: RoleEnum.ADMINISTRADOR,
         },
-        queryRunner,
-      );
+      });
 
+      // Crear persona
       const persona = await this.createPersona(
         {
           primerNombre: registerAuthDto.primerNombre,
@@ -68,7 +72,18 @@ export class AuthService {
         queryRunner,
       );
 
-      await this.createCliente({ usuario, persona }, queryRunner);
+      // Crear usuario
+      const usuario = await this.createUsuario(
+        {
+          correo: registerAuthDto.correo,
+          contrasenia: registerAuthDto.contrasenia,
+          role,
+          persona,
+        },
+        queryRunner,
+      );
+
+      await this.createCliente({ persona }, queryRunner);
 
       // Generar codigo para verificar correo
       const codigo = this.generateCodigo();
@@ -92,6 +107,13 @@ export class AuthService {
     }
   }
 
+  private async createPersona(
+    persona: Partial<Persona>,
+    queryRunner: QueryRunner,
+  ) {
+    return queryRunner.manager.getRepository(Persona).save(persona);
+  }
+
   private async createUsuario(
     usuario: Partial<Usuario>,
     queryRunner: QueryRunner,
@@ -101,14 +123,9 @@ export class AuthService {
     return queryRunner.manager.getRepository(Usuario).save({
       correo: usuario.correo,
       contrasenia: hash,
+      role: usuario.role,
+      persona: usuario.persona,
     });
-  }
-
-  private async createPersona(
-    persona: Partial<Persona>,
-    queryRunner: QueryRunner,
-  ) {
-    return queryRunner.manager.getRepository(Persona).save(persona);
   }
 
   private async createCliente(
@@ -116,7 +133,6 @@ export class AuthService {
     queryRunner: QueryRunner,
   ) {
     await queryRunner.manager.getRepository(Cliente).save({
-      usuario: cliente.usuario,
       persona: cliente.persona,
     });
   }
@@ -172,7 +188,7 @@ export class AuthService {
     const payload = {
       sub: usuario.id,
       correo: usuario.correo,
-      nombre: `${usuario.cliente.persona.primerNombre} ${usuario.cliente.persona.primerApellido}`,
+      nombre: `${usuario.persona.primerNombre} ${usuario.persona.primerApellido}`,
     };
 
     return this.jwtService.sign(payload, {

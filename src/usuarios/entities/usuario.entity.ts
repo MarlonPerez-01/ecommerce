@@ -2,12 +2,16 @@ import {
   Column,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Cliente } from '../../clientes/entities/cliente.entity';
+
 import { Codigo } from '../../codigos/entities/codigo.entity';
+import { Persona } from '../../personas/entities/persona.entity';
+import { Role } from '../../roles/entities/roles.entity';
 import { Token } from '../../tokens/entities/token.entity';
 
 @Entity()
@@ -21,8 +25,16 @@ export class Usuario {
   @Column()
   contrasenia: string;
 
-  @OneToOne(() => Cliente, (cliente) => cliente.usuario)
-  cliente: Cliente;
+  @OneToOne(() => Persona)
+  @JoinColumn()
+  persona: Persona;
+
+  @Column({ type: 'int', nullable: false })
+  roleId: number;
+
+  @ManyToOne(() => Role)
+  @JoinColumn({ name: 'roleId' })
+  role: Role;
 
   @OneToMany(() => Token, (token) => token.usuario)
   tokens: Token[];

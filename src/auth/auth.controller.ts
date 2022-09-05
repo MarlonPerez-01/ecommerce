@@ -1,4 +1,11 @@
-import { Body, Controller, Get, HttpCode, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { Usuario } from '../usuarios/entities/usuario.entity';
@@ -34,10 +41,7 @@ export class AuthController {
 
   @UseGuards(RefreshTokenGuard)
   @Post('refresh-token')
-  async refresh(
-    @Body() refreshAuthDto: RefreshAuthDto,
-    @GetUsuarioActual() usuario: Usuario,
-  ) {
+  async refresh(@Body() refreshAuthDto: RefreshAuthDto) {
     const accessToken = await this.authService.refreshToken(refreshAuthDto);
     return { accessToken, refreshToken: refreshAuthDto.refreshToken };
   }

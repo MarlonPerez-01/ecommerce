@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
-import { CodigosService } from './codigos.service';
-import { CodigosController } from './codigos.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { CodigosController } from './codigos.controller';
+import { CodigosService } from './codigos.service';
 import { Codigo } from './entities/codigo.entity';
 
 @Module({

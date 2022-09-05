@@ -32,8 +32,8 @@ import { PedidosModule } from './pedidos/pedidos.module';
 import { PersonasModule } from './personas/personas.module';
 import { ProductosModule } from './productos/productos.module';
 import { ProveedoresModule } from './proveedores/proveedores.module';
+import { RolesModule } from './roles/roles-module';
 import { TipoCodigosModule } from './tipo-codigos/tipo-codigos.module';
-import { TipoUsuariosModule } from './tipo-usuarios/tipo-usuarios.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 
 @Module({
@@ -89,7 +89,7 @@ import { UsuariosModule } from './usuarios/usuarios.module';
     PersonasModule,
     ProductosModule,
     ProveedoresModule,
-    TipoUsuariosModule,
+    RolesModule,
     UsuariosModule,
     CuponesModule,
     ComentariosModule,

@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTipoUsuarioDto } from './dto/create-tipo-usuario.dto';
-import { UpdateTipoUsuarioDto } from './dto/update-tipo-usuario.dto';
+
+import { CreateRolesDto } from './dto/create-roles.dto';
+import { UpdateRolesDto } from './dto/update-roles.dto';
 
 @Injectable()
-export class TipoUsuariosService {
-  create(createTipoUsuarioDto: CreateTipoUsuarioDto) {
+export class RolesService {
+  create(createRolesDto: CreateRolesDto) {
     return 'This action adds a new tipoUsuario';
   }
 
@@ -16,7 +17,7 @@ export class TipoUsuariosService {
     return `This action returns a #${id} tipoUsuario`;
   }
 
-  update(id: number, updateTipoUsuarioDto: UpdateTipoUsuarioDto) {
+  update(id: number, updateRolesDto: UpdateRolesDto) {
     return `This action updates a #${id} tipoUsuario`;
   }
 

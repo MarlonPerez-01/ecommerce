@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
 import { CreateClienteDto } from './dto/create-cliente.dto';
 import { UpdateClienteDto } from './dto/update-cliente.dto';
-import { Repository } from 'typeorm';
 import { Cliente } from './entities/cliente.entity';
-import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class ClientesService {
@@ -18,8 +19,7 @@ export class ClientesService {
   }
 
   async findAll() {
-    const clientes = this.clienteRepository.find();
-    return clientes;
+    return this.clienteRepository.find();
   }
 
   async findOne(id: number) {
