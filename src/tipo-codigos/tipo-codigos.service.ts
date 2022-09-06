@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+
 import { CreateTipoCodigoDto } from './dto/create-tipo-codigo.dto';
 import { UpdateTipoCodigoDto } from './dto/update-tipo-codigo.dto';
 
