@@ -22,7 +22,6 @@ export class RefreshTokenStrategy extends PassportStrategy(
   }
 
   validate(req: Request, payload: JwtRefreshPayload): Promise<Usuario> {
-    console.log(req.body?.refreshToken);
     return this.authService.getUsuarioById(payload.sub);
   }
 }

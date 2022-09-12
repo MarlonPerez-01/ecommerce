@@ -11,10 +11,14 @@ import {
   Post,
   Query,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
+import { AccessTokenGuard } from '../auth/guards/access-token.guard';
+import RoleGuard from '../auth/guards/role.guard';
+import { RoleEnum } from '../common/enums/role.enum';
 import LocalFileInterceptor from '../local-file/interceptors/local-file.interceptor';
 import { CreateProductoDto } from './dto/create-producto.dto';
 import { FindProductosDTO } from './dto/find-productos.dto';
@@ -31,6 +35,8 @@ export class ProductosController {
     return this.productosService.create(createProductoDto);
   }
 
+  @UseGuards(RoleGuard(RoleEnum.CLIENTE))
+  @UseGuards(AccessTokenGuard)
   @Get()
   findAll(@Query() findProductosDTO: FindProductosDTO) {
     return this.productosService.findAll(findProductosDTO);

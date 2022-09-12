@@ -6,9 +6,15 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
+import { GetUsuarioActual } from '../auth/decorators/get-usuario-actual.decorator';
+import { AccessTokenGuard } from '../auth/guards/access-token.guard';
+import RoleGuard from '../auth/guards/role.guard';
+import { RoleEnum } from '../common/enums/role.enum';
+import { Usuario } from '../usuarios/entities/usuario.entity';
 import { ComentariosService } from './comentarios.service';
 import { CreateComentarioDto } from './dto/create-comentario.dto';
 import { UpdateComentarioDto } from './dto/update-comentario.dto';
@@ -18,31 +24,36 @@ import { UpdateComentarioDto } from './dto/update-comentario.dto';
 export class ComentariosController {
   constructor(private readonly comentariosService: ComentariosService) {}
 
+  @UseGuards(RoleGuard(RoleEnum.CLIENTE))
+  @UseGuards(AccessTokenGuard)
   @Post()
-  create(@Body() createComentarioDto: CreateComentarioDto) {
-    return this.comentariosService.create(createComentarioDto);
+  async create(
+    @Body() createComentarioDto: CreateComentarioDto,
+    @GetUsuarioActual() usuario: Usuario,
+  ) {
+    return this.comentariosService.create(usuario.id, createComentarioDto);
   }
 
-  @Get()
-  findAll() {
-    return this.comentariosService.findAll();
+  @Get(':productoId')
+  async findAllByProductoId(@Param('productoId') productoId: number) {
+    return this.comentariosService.findAllByProductoId(productoId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.comentariosService.findOne(id);
-  }
-
+  @UseGuards(RoleGuard(RoleEnum.CLIENTE))
+  @UseGuards(AccessTokenGuard)
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: number,
     @Body() updateComentarioDto: UpdateComentarioDto,
+    @GetUsuarioActual() usuario: Usuario,
   ) {
-    return this.comentariosService.update(id, updateComentarioDto);
+    return this.comentariosService.update(id, usuario.id, updateComentarioDto);
   }
 
+  @UseGuards(RoleGuard(RoleEnum.CLIENTE))
+  @UseGuards(AccessTokenGuard)
   @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.comentariosService.remove(id);
+  async remove(@Param('id') id: number, @GetUsuarioActual() usuario: Usuario) {
+    return this.comentariosService.remove(id, usuario.id);
   }
 }

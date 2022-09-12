@@ -1,12 +1,20 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 import { CreateCodigoDto } from './dto/create-codigo.dto';
 import { UpdateCodigoDto } from './dto/update-codigo.dto';
+import { Codigo } from './entities/codigo.entity';
 
 @Injectable()
 export class CodigosService {
+  constructor(
+    @InjectRepository(Codigo)
+    private readonly codigoRepository: Repository<Codigo>,
+  ) {}
+
   create(createCodigoDto: CreateCodigoDto) {
-    return 'This action adds a new codigo';
+    return this.codigoRepository.save(createCodigoDto);
   }
 
   findAll() {

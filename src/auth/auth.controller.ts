@@ -36,10 +36,13 @@ export class AuthController {
     return this.authService.login(usuario);
   }
 
+  // FIXME: eliminar propiedad contrasenia en un interceptor
   @UseGuards(AccessTokenGuard)
   @Get('me')
   async getUsuario(@GetUsuarioActual() usuario: Usuario) {
-    return this.authService.getUsuarioById(usuario.id);
+    const data = await this.authService.getUsuarioById(usuario.id);
+    delete data.contrasenia;
+    return data;
   }
 
   @UseGuards(RefreshTokenGuard)

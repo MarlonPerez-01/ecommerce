@@ -1,34 +1,56 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+import { RoleEnum } from '../common/enums/role.enum';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Usuario } from './entities/usuario.entity';
-import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsuariosService {
   constructor(
     @InjectRepository(Usuario)
-    private readonly usuarios: Repository<Usuario>,
+    private readonly usuariosRepository: Repository<Usuario>,
   ) {}
 
-  create(createUsuarioDto: CreateUsuarioDto) {
-    return 'This action adds a new usuario';
+  // TODO: validar que solo pueda crearlo un admin
+  async create(createUsuarioDto: CreateUsuarioDto) {
+    const usuario = this.usuariosRepository.create({
+      persona: {
+        id: createUsuarioDto.idPersona,
+      },
+      role: {
+        role: RoleEnum.EMPLEADO,
+      },
+      correo: createUsuarioDto.correo,
+      contrasenia: createUsuarioDto.contrasenia,
+    });
+
+    return this.usuariosRepository.save(usuario);
   }
 
-  findAll() {
-    return `This action returns all usuarios`;
+  async findAll() {
+    return this.usuariosRepository.find();
   }
 
   async findOne(id: number) {
-    return this.usuarios.findOneBy({ id });
+    return this.usuariosRepository.findOneBy({ id });
+  }
+
+  async findOneWithCliente(id: number) {
+    return this.usuariosRepository.findOne({
+      where: { id },
+      relations: ['persona', 'persona.cliente'],
+      relationLoadStrategy: 'join',
+    });
   }
 
   update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
     return `This action updates a #${id} usuario`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} usuario`;
+  async remove(id: number) {
+    return this.usuariosRepository.softDelete(id);
   }
 }

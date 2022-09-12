@@ -245,7 +245,7 @@ export class AuthService {
       where: {
         id: decodedToken.sub,
       },
-      relations: ['cliente', 'cliente.persona'],
+      relations: ['role', 'persona'],
     });
 
     if (!usuario) throw new NotFoundException();
@@ -256,7 +256,7 @@ export class AuthService {
   async getUsuarioById(id: number) {
     return await this.usuariosRepository.findOne({
       where: { id },
-      relations: ['role', 'persona', 'persona.cliente'],
+      relations: ['role', 'persona'],
     });
   }
 
