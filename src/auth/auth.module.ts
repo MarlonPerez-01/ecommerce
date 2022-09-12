@@ -3,6 +3,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { Codigo } from '../codigos/entities/codigo.entity';
 import { EmailsModule } from '../emails/emails.module';
 import { Token } from '../tokens/entities/token.entity';
 import { Usuario } from '../usuarios/entities/usuario.entity';
@@ -18,7 +19,7 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
     EmailsModule,
     PassportModule,
     JwtModule.register(null),
-    TypeOrmModule.forFeature([Usuario, Token]),
+    TypeOrmModule.forFeature([Usuario, Token, Codigo]),
   ],
   providers: [
     AuthService,

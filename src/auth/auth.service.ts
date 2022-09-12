@@ -12,6 +12,7 @@ import { DataSource, QueryRunner, Repository } from 'typeorm';
 
 import { Cliente } from '../clientes/entities/cliente.entity';
 import { Codigo } from '../codigos/entities/codigo.entity';
+import { CodigoEnum } from '../common/enums/codigo.enum';
 import { RoleEnum } from '../common/enums/role.enum';
 import { addMinutes } from '../common/helpers/Date';
 import { EmailsService } from '../emails/emails.service';
@@ -19,8 +20,10 @@ import { Persona } from '../personas/entities/persona.entity';
 import { Role } from '../roles/entities/roles.entity';
 import { Token } from '../tokens/entities/token.entity';
 import { Usuario } from '../usuarios/entities/usuario.entity';
+import { CambiarContraseniaDto } from './dto/cambiar-contrasenia.dto';
 import { RefreshAuthDto } from './dto/refresh-auth.dto';
 import { RegisterAuthDto } from './dto/register-auth.dto';
+import { VerifyAccountDto } from './dto/verify-account.dto';
 import { JwtRefreshPayload } from './interfaces/jwt-refresh.interface';
 
 @Injectable()
@@ -30,6 +33,8 @@ export class AuthService {
     private readonly usuariosRepository: Repository<Usuario>,
     @InjectRepository(Token)
     private readonly tokenRepository: Repository<Token>,
+    @InjectRepository(Codigo)
+    private readonly codigoRepository: Repository<Codigo>,
     private readonly jwtService: JwtService,
     private readonly emailsService: EmailsService,
     private readonly dataSource: DataSource,
@@ -57,7 +62,7 @@ export class AuthService {
       // Obtener rol de cliente
       const role = await queryRunner.manager.findOne(Role, {
         where: {
-          role: RoleEnum.ADMINISTRADOR,
+          role: RoleEnum.CLIENTE,
         },
       });
 
@@ -150,7 +155,7 @@ export class AuthService {
   ) {
     await queryRunner.manager.getRepository(Codigo).save({
       codigo: codigo.toString(),
-      tipo: 'correo',
+      tipo: CodigoEnum.VERIFICACION,
       usuarioId: usuario.id,
       fechaExpiracion: addMinutes(new Date(), 15),
     });
@@ -159,22 +164,31 @@ export class AuthService {
   // Obtiene usuario si las credenciales son correctas
   async getUsuarioAutenticado(correo: string, plainContrasenia: string) {
     // FIXME: optimizar query
-    const user = await this.usuariosRepository.findOne({
+    const usuario = await this.usuariosRepository.findOne({
       where: { correo },
       relations: ['role', 'persona', 'persona.cliente'],
     });
 
-    if (!user) throw new NotFoundException('Usuario no encontrado');
+    if (!usuario) throw new NotFoundException('Usuario no encontrado');
 
+    // Valida que el usuario ya haya verificado su cuenta
+    const codigo = await this.codigoRepository.findOneBy({
+      usuarioId: usuario.id,
+      tipo: CodigoEnum.VERIFICACION,
+    });
+
+    if (codigo?.codigo) throw new UnauthorizedException('Verifica tu cuenta');
+
+    // Valida las credenciales
     const match = await this.verifyContrasenia(
       plainContrasenia,
-      user.contrasenia,
+      usuario.contrasenia,
     );
 
     if (!match) throw new UnauthorizedException('Credenciales incorrectas');
 
-    user.contrasenia = undefined;
-    return user;
+    usuario.contrasenia = undefined;
+    return usuario;
   }
 
   async generateTokens(usuario: Usuario) {
@@ -248,7 +262,7 @@ export class AuthService {
 
   async verifyContrasenia(plain: string, hash: string) {
     const match = await bcrypt.compare(plain, hash);
-    if (!match) throw new UnauthorizedException();
+    if (!match) throw new UnauthorizedException('Credenciales incorrectas');
     return true;
   }
 
@@ -260,5 +274,99 @@ export class AuthService {
   async refreshToken(refreshAuthDto: RefreshAuthDto) {
     const { refreshToken } = refreshAuthDto;
     return this.generateAccessTokenFromRefreshToken(refreshToken);
+  }
+
+  async verifyAccount(verifyAccountDto: VerifyAccountDto) {
+    const codigo = await this.codigoRepository.findOneBy({
+      codigo: verifyAccountDto.codigo,
+    });
+
+    if (!codigo) throw new NotFoundException('Codigo no encontrado');
+
+    return this.codigoRepository.softDelete({ id: codigo.id });
+  }
+
+  async enviarCorreoCambiarContrasenia(correo: string) {
+    // Generar codigo para cambiar contrasenia
+    const codigoGenerado = this.generateCodigo();
+
+    // Obtener usuario
+    const usuario = await this.usuariosRepository.findOne({
+      where: { correo },
+      relations: ['persona'],
+    });
+
+    if (!usuario) throw new NotFoundException('Usuario no encontrado');
+
+    // Crear codigo y almacenarlo en la base de datos
+    const codigo = this.codigoRepository.create({
+      codigo: codigoGenerado,
+      tipo: CodigoEnum.CAMBIO_CONTRASENIA,
+      usuarioId: usuario.id,
+      fechaExpiracion: addMinutes(new Date(), 15),
+    });
+
+    await this.codigoRepository.save(codigo);
+
+    // Enviar correo con codigo de verificacion
+    return await this.emailsService.sendAccountConfirmation({
+      to: correo,
+      nombre: `${usuario.persona.primerNombre} ${usuario.persona.primerApellido}`,
+      codigo: codigoGenerado,
+    });
+  }
+
+  async cambiarContrasenia(cambiarContraseniaDto: CambiarContraseniaDto) {
+    const codigoVerificacion = await this.codigoRepository.findOneBy({
+      codigo: cambiarContraseniaDto.codigo,
+      tipo: CodigoEnum.CAMBIO_CONTRASENIA,
+    });
+
+    if (!codigoVerificacion) {
+      throw new NotFoundException('Codigo no encontrado');
+    }
+
+    const usuario = await this.getUsuarioById(codigoVerificacion.usuarioId);
+
+    const hash = await bcrypt.hash(cambiarContraseniaDto.contrasenia, 10);
+
+    return this.usuariosRepository.update(usuario.id, { contrasenia: hash });
+  }
+
+  async resendConfirmationEmail(correo: string) {
+    // Obtener usuario
+    const usuario = await this.usuariosRepository.findOne({
+      where: { correo },
+      relations: ['persona'],
+    });
+
+    if (!usuario) throw new NotFoundException('Usuario no encontrado');
+
+    // Obtener codigo de verificacion
+    const codigo = await this.codigoRepository.findOne({
+      where: { usuarioId: usuario.id, tipo: CodigoEnum.VERIFICACION },
+      withDeleted: true,
+    });
+
+    if (!codigo) throw new NotFoundException('Correo no encontrado');
+
+    if (codigo.fechaExpiracion > new Date()) {
+      throw new BadRequestException('El codigo no ha expirado aun');
+    }
+
+    // Generar nuevo codigo y actualizarlo en la base de datos
+    const codigoVerificacion = this.generateCodigo();
+
+    await this.codigoRepository.update(codigo.id, {
+      codigo: codigoVerificacion,
+      fechaExpiracion: addMinutes(new Date(), 15),
+    });
+
+    // Enviar correo con codigo de verificacion
+    return await this.emailsService.sendAccountConfirmation({
+      to: correo,
+      nombre: `${usuario.persona.primerNombre} ${usuario.persona.primerApellido}`,
+      codigo: codigoVerificacion,
+    });
   }
 }

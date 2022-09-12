@@ -11,8 +11,11 @@ import { ApiTags } from '@nestjs/swagger';
 import { Usuario } from '../usuarios/entities/usuario.entity';
 import { AuthService } from './auth.service';
 import { GetUsuarioActual } from './decorators/get-usuario-actual.decorator';
+import { CambiarContraseniaDto } from './dto/cambiar-contrasenia.dto';
+import { CorreoDto } from './dto/correo.dto';
 import { RefreshAuthDto } from './dto/refresh-auth.dto';
 import { RegisterAuthDto } from './dto/register-auth.dto';
+import { VerifyAccountDto } from './dto/verify-account.dto';
 import { AccessTokenGuard } from './guards/access-token.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { RefreshTokenGuard } from './guards/refresh-token.guard';
@@ -54,23 +57,27 @@ export class AuthController {
     return null;
   }
 
-  @Post('confirm-account')
-  async confirmAccount(@Body() confirmAccountDto: { codigo: string }) {
-    return 'account confirmed';
+  @Post('verify-account')
+  async verifyAccountDto(@Body() verifyAccountDto: VerifyAccountDto) {
+    return this.authService.verifyAccount(verifyAccountDto);
   }
 
   @Post('resend-confirmation-email')
-  async resendConfirmationEmail() {
-    return 'resend confirmation email';
+  async resendConfirmationEmail(@Body() correoDto: CorreoDto) {
+    const { correo } = correoDto;
+    return this.authService.resendConfirmationEmail(correo);
   }
 
-  @Post('reset-password')
-  async resetPassword() {
-    return 'reset password';
+  @Post('correo-cambiar-contrasenia')
+  async enviarCorreoCambiarContrasenia(@Body() correoDto: CorreoDto) {
+    const { correo } = correoDto;
+    return this.authService.enviarCorreoCambiarContrasenia(correo);
   }
 
-  @Post('forgot-password')
-  async forgotPassword() {
-    return 'reset password';
+  @Post('cambiar-contrasenia')
+  async cambiarContrasenia(
+    @Body() cambiarContraseniaDto: CambiarContraseniaDto,
+  ) {
+    return this.authService.cambiarContrasenia(cambiarContraseniaDto);
   }
 }

@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 
-import { UpdateEmailDto } from './dto/update-email.dto';
-
 interface ConfirmacionCorreo {
   to: string;
   nombre: string;
@@ -25,19 +23,15 @@ export class EmailsService {
     });
   }
 
-  findAll() {
-    return `This action returns all emails`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} email`;
-  }
-
-  update(id: number, updateEmailDto: UpdateEmailDto) {
-    return `This action updates a #${id} email`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} email`;
+  async sendCambiarContrasenia(confirmacionCorreo: ConfirmacionCorreo) {
+    return this.mailerService.sendMail({
+      to: confirmacionCorreo.to,
+      subject: 'Cambio de contraseña',
+      template: __dirname + '/templates/confirmation',
+      context: {
+        nombre: confirmacionCorreo.nombre,
+        url: `http://localhost:3000/auth/cambiar-contrasenia/${confirmacionCorreo.codigo}`,
+      },
+    });
   }
 }

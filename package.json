@@ -43,6 +43,7 @@
     "nodemailer": "^6.7.8",
     "npm": "^8.18.0",
     "passport": "^0.6.0",
+    "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "pg": "^8.7.3",

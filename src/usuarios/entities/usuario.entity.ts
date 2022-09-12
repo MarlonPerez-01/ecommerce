@@ -39,9 +39,9 @@ export class Usuario {
   @OneToMany(() => Token, (token) => token.usuario)
   tokens: Token[];
 
-  @DeleteDateColumn({ select: false })
-  deletedAt: Date;
-
   @OneToMany(() => Codigo, (codigo) => codigo.usuario)
   codigos: string[];
+
+  @DeleteDateColumn({ select: false })
+  deletedAt: Date;
 }
