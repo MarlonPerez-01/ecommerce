@@ -24,7 +24,7 @@ import { UpdateComentarioDto } from './dto/update-comentario.dto';
 export class ComentariosController {
   constructor(private readonly comentariosService: ComentariosService) {}
 
-  @UseGuards(RoleGuard(RoleEnum.CLIENTE))
+  @UseGuards(RoleGuard([RoleEnum.CLIENTE]))
   @UseGuards(AccessTokenGuard)
   @Post()
   async create(
@@ -39,7 +39,7 @@ export class ComentariosController {
     return this.comentariosService.findAllByProductoId(productoId);
   }
 
-  @UseGuards(RoleGuard(RoleEnum.CLIENTE))
+  @UseGuards(RoleGuard([RoleEnum.CLIENTE]))
   @UseGuards(AccessTokenGuard)
   @Patch(':id')
   async update(
@@ -50,7 +50,7 @@ export class ComentariosController {
     return this.comentariosService.update(id, usuario.id, updateComentarioDto);
   }
 
-  @UseGuards(RoleGuard(RoleEnum.CLIENTE))
+  @UseGuards(RoleGuard([RoleEnum.CLIENTE]))
   @UseGuards(AccessTokenGuard)
   @Delete(':id')
   async remove(@Param('id') id: number, @GetUsuarioActual() usuario: Usuario) {

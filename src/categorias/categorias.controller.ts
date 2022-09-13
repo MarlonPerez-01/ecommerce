@@ -7,9 +7,13 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
+import { AccessTokenGuard } from '../auth/guards/access-token.guard';
+import RoleGuard from '../auth/guards/role.guard';
+import { RoleEnum } from '../common/enums/role.enum';
 import { CategoriasService } from './categorias.service';
 import { CreateCategoriaDto } from './dto/create-categoria.dto';
 import { FindCategoriasDto } from './dto/find-categorias.dto';
@@ -20,6 +24,8 @@ import { UpdateCategoriaDto } from './dto/update-categoria.dto';
 export class CategoriasController {
   constructor(private readonly categoriasService: CategoriasService) {}
 
+  @UseGuards(RoleGuard([RoleEnum.EMPLEADO]))
+  @UseGuards(AccessTokenGuard)
   @Post()
   create(@Body() createCategoriaDto: CreateCategoriaDto) {
     return this.categoriasService.create(createCategoriaDto);
@@ -35,6 +41,8 @@ export class CategoriasController {
     return this.categoriasService.findOne(id);
   }
 
+  @UseGuards(RoleGuard([RoleEnum.EMPLEADO]))
+  @UseGuards(AccessTokenGuard)
   @Patch(':id')
   update(
     @Param('id') id: number,
@@ -43,6 +51,8 @@ export class CategoriasController {
     return this.categoriasService.update(id, updateCategoriaDto);
   }
 
+  @UseGuards(RoleGuard([RoleEnum.EMPLEADO]))
+  @UseGuards(AccessTokenGuard)
   @Delete(':id')
   remove(@Param('id') id: number) {
     return this.categoriasService.remove(id);

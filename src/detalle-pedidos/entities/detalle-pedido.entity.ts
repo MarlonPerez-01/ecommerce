@@ -1,6 +1,13 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 import { Pedido } from '../../pedidos/entities/pedido.entity';
+import { Producto } from '../../productos/entities/producto.entity';
 
 @Entity()
 export class DetallePedido {
@@ -9,6 +16,13 @@ export class DetallePedido {
 
   @ManyToOne(() => Pedido, (pedido) => pedido.detallePedidos)
   pedido: Pedido;
+
+  @Column({ type: 'int', nullable: false })
+  productoId: number;
+
+  @ManyToOne(() => Producto, (producto) => producto.detalleCarritos)
+  @JoinColumn({ name: 'productoId' })
+  producto: Producto;
 
   @Column('smallint')
   cantidad: number;

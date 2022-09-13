@@ -30,12 +30,13 @@ import { ProductosService } from './productos.service';
 export class ProductosController {
   constructor(private readonly productosService: ProductosService) {}
 
+  @UseGuards(RoleGuard([RoleEnum.EMPLEADO, RoleEnum.ADMINISTRADOR]))
+  @UseGuards(AccessTokenGuard)
   @Post()
   create(@Body() createProductoDto: CreateProductoDto) {
     return this.productosService.create(createProductoDto);
   }
 
-  @UseGuards(RoleGuard(RoleEnum.CLIENTE))
   @UseGuards(AccessTokenGuard)
   @Get()
   findAll(@Query() findProductosDTO: FindProductosDTO) {
@@ -47,6 +48,8 @@ export class ProductosController {
     return this.productosService.findOne(id);
   }
 
+  @UseGuards(RoleGuard([RoleEnum.EMPLEADO, RoleEnum.ADMINISTRADOR]))
+  @UseGuards(AccessTokenGuard)
   @Patch(':id')
   update(
     @Param('id') id: number,
@@ -55,11 +58,15 @@ export class ProductosController {
     return this.productosService.update(id, updateProductoDto);
   }
 
+  @UseGuards(RoleGuard([RoleEnum.EMPLEADO, RoleEnum.ADMINISTRADOR]))
+  @UseGuards(AccessTokenGuard)
   @Delete(':id')
   remove(@Param('id') id: number) {
     return this.productosService.remove(id);
   }
 
+  @UseGuards(RoleGuard([RoleEnum.EMPLEADO, RoleEnum.ADMINISTRADOR]))
+  @UseGuards(AccessTokenGuard)
   @Post('images')
   @UseInterceptors(
     LocalFileInterceptor({

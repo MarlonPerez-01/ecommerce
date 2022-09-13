@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -15,19 +16,25 @@ export class Pedido {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ type: 'int', nullable: false })
+  proveedorId: number;
+
   @ManyToOne(() => Proveedor, (proveedor) => proveedor.pedidos)
+  @JoinColumn({ name: 'proveedorId' })
   proveedor: Proveedor;
 
-  @OneToMany(() => DetallePedido, (detallePedido) => detallePedido.pedido)
+  @OneToMany(() => DetallePedido, (detallePedido) => detallePedido.pedido, {
+    cascade: ['insert', 'update'],
+  })
   detallePedidos: DetallePedido[];
 
   @Column({ type: 'decimal', precision: 6, scale: 2 })
   total: number;
 
-  @Column()
+  @Column({ default: 'Pendiente' })
   estadoEnvio: string;
 
-  @Column()
+  @Column({ default: 'Pendiente' })
   estadoPago: string;
 
   @CreateDateColumn()
