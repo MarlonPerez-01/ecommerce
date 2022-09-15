@@ -43,6 +43,18 @@ export class CreateProductoDto {
   precioVenta: number;
 
   @IsOptional()
+  @IsNumber()
+  cantidad: number;
+
+  @IsOptional()
+  @IsNumber()
+  entrante: number;
+
+  @IsOptional()
+  @IsNumber()
+  estropeado: number;
+
+  @IsOptional()
   @IsString()
   descripcion: string;
 

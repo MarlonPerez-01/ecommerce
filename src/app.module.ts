@@ -33,6 +33,7 @@ import { PersonasModule } from './personas/personas.module';
 import { ProductosModule } from './productos/productos.module';
 import { ProveedoresModule } from './proveedores/proveedores.module';
 import { RolesModule } from './roles/roles-module';
+import { SeedModule } from './seed/seed.module';
 import { TipoCodigosModule } from './tipo-codigos/tipo-codigos.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 
@@ -101,6 +102,7 @@ import { UsuariosModule } from './usuarios/usuarios.module';
     DetalleOrdenesModule,
     DetalleCarritosModule,
     CarritoModule,
+    SeedModule,
   ],
   controllers: [AppController],
   providers: [AppService],

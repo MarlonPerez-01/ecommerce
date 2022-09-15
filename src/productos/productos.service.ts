@@ -50,7 +50,11 @@ export class ProductosService {
       }),
       categoria,
       marca,
-      inventario: {},
+      inventario: {
+        cantidad: createProductoDto.cantidad,
+        entrante: createProductoDto.entrante,
+        estropeado: createProductoDto.estropeado,
+      },
     });
 
     return this.productosRepository.save(producto);

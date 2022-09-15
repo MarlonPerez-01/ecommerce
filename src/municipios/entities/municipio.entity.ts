@@ -1,4 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 import { Departamento } from '../../departamentos/entities/departamento.entity';
 
@@ -10,6 +16,10 @@ export class Municipio {
   @Column()
   nombre: string;
 
+  @Column()
+  departamentoId: number;
+
   @ManyToOne(() => Departamento, (departamento) => departamento.municipios)
+  @JoinColumn({ name: 'departamentoId' })
   departamento: Departamento;
 }

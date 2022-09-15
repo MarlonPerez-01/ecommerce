@@ -27,8 +27,11 @@ export class Usuario {
   @Column()
   contrasenia: string;
 
-  @OneToOne(() => Persona)
-  @JoinColumn()
+  @Column()
+  personaId: number;
+
+  @OneToOne(() => Persona, { cascade: ['insert', 'update'] })
+  @JoinColumn({ name: 'personaId' })
   persona: Persona;
 
   @Column({ type: 'int', nullable: false })
