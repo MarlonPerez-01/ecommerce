@@ -17,22 +17,22 @@ export class DescuentosController {
   constructor(private readonly descuentosService: DescuentosService) {}
 
   @Post()
-  create(@Body() createDescuentoDto: CreateDescuentoDto) {
+  async create(@Body() createDescuentoDto: CreateDescuentoDto) {
     return this.descuentosService.create(createDescuentoDto);
   }
 
   @Get()
-  findAll() {
+  async findAll() {
     return this.descuentosService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
+  async findOne(@Param('id') id: number) {
     return this.descuentosService.findOne(id);
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: number,
     @Body() updateDescuentoDto: UpdateDescuentoDto,
   ) {
@@ -40,7 +40,7 @@ export class DescuentosController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number) {
+  async remove(@Param('id') id: number) {
     return this.descuentosService.remove(id);
   }
 }

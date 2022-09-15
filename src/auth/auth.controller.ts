@@ -1,10 +1,12 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Get,
   HttpCode,
   Post,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -36,13 +38,11 @@ export class AuthController {
     return this.authService.login(usuario);
   }
 
-  // FIXME: eliminar propiedad contrasenia en un interceptor
+  @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(AccessTokenGuard)
   @Get('me')
   async getUsuario(@GetUsuarioActual() usuario: Usuario) {
-    const data = await this.authService.getUsuarioById(usuario.id);
-    delete data.contrasenia;
-    return data;
+    return this.authService.getUsuarioById(usuario.id);
   }
 
   @UseGuards(RefreshTokenGuard)
@@ -52,13 +52,11 @@ export class AuthController {
     return { accessToken, refreshToken: refreshAuthDto.refreshToken };
   }
 
-  // FIXME: se debe eliminar el refresh token específico
+  @UseGuards(RefreshTokenGuard)
   @HttpCode(204)
-  @UseGuards(AccessTokenGuard)
   @Post('logout')
-  async logout(@GetUsuarioActual() usuario: Usuario) {
-    await this.authService.logout(usuario.id);
-    return null;
+  async logout(@Body() refreshAuthDto: RefreshAuthDto) {
+    return this.authService.logout(refreshAuthDto);
   }
 
   @Post('verify-account')
@@ -68,17 +66,15 @@ export class AuthController {
 
   @Post('resend-confirmation-email')
   async resendConfirmationEmail(@Body() correoDto: CorreoDto) {
-    const { correo } = correoDto;
-    return this.authService.resendConfirmationEmail(correo);
+    return this.authService.resendConfirmationEmail(correoDto.correo);
   }
 
-  @Post('correo-cambiar-contrasenia')
+  @Post('email-change-password')
   async enviarCorreoCambiarContrasenia(@Body() correoDto: CorreoDto) {
-    const { correo } = correoDto;
-    return this.authService.enviarCorreoCambiarContrasenia(correo);
+    return this.authService.enviarCorreoCambiarContrasenia(correoDto.correo);
   }
 
-  @Post('cambiar-contrasenia')
+  @Post('change-password')
   async cambiarContrasenia(
     @Body() cambiarContraseniaDto: CambiarContraseniaDto,
   ) {

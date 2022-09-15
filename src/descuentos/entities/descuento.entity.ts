@@ -1,14 +1,23 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 import { Producto } from '../../productos/entities/producto.entity';
 
 @Entity()
 export class Descuento {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => Producto)
-  @JoinColumn()
+  @Column()
+  productoId: number;
+
+  @OneToOne(() => Producto, { cascade: ['insert', 'update'] })
+  @JoinColumn({ name: 'productoId' })
   producto: Producto;
 
   @Column()

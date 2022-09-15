@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -32,5 +32,17 @@ export class TokensService {
 
   remove(id: number) {
     return `This action removes a #${id} token`;
+  }
+
+  async findOneByToken(token: string) {
+    const tokenDB = await this.tokenRepository.findOneBy({ token });
+    if (!tokenDB) throw new NotFoundException('Token no encontrado');
+    return tokenDB;
+  }
+
+  async removeByToken(token: string) {
+    const tokenDB = await this.findOneByToken(token);
+    if (!tokenDB) throw new NotFoundException('Token no encontrado');
+    return this.tokenRepository.delete({ token });
   }
 }

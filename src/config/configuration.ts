@@ -14,4 +14,6 @@ export const configuration = (() =>
     EMAIL_USER: Joi.required(),
     EMAIL_PASSWORD: Joi.required(),
     EMAIL_FROM: Joi.required(),
+    STRIPE_SECRET_KEY: Joi.required(),
+    STRIPE_CURRENCY: Joi.required(),
   }))();

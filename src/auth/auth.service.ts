@@ -19,6 +19,7 @@ import { EmailsService } from '../emails/emails.service';
 import { Persona } from '../personas/entities/persona.entity';
 import { Role } from '../roles/entities/roles.entity';
 import { Token } from '../tokens/entities/token.entity';
+import { TokensService } from '../tokens/tokens.service';
 import { Usuario } from '../usuarios/entities/usuario.entity';
 import { CambiarContraseniaDto } from './dto/cambiar-contrasenia.dto';
 import { RefreshAuthDto } from './dto/refresh-auth.dto';
@@ -35,6 +36,7 @@ export class AuthService {
     private readonly tokenRepository: Repository<Token>,
     @InjectRepository(Codigo)
     private readonly codigoRepository: Repository<Codigo>,
+    private readonly tokensService: TokensService,
     private readonly jwtService: JwtService,
     private readonly emailsService: EmailsService,
     private readonly dataSource: DataSource,
@@ -266,9 +268,8 @@ export class AuthService {
     return true;
   }
 
-  async logout(idUsuario: number) {
-    await this.tokenRepository.softDelete({ idUsuario });
-    return null;
+  async logout(refreshAuthDto: RefreshAuthDto) {
+    return this.tokensService.removeByToken(refreshAuthDto.refreshToken);
   }
 
   async refreshToken(refreshAuthDto: RefreshAuthDto) {
@@ -298,8 +299,18 @@ export class AuthService {
 
     if (!usuario) throw new NotFoundException('Usuario no encontrado');
 
+    // Verificar si ya existe un codigo de cambio de contrasenia
+    const codigoDB = await this.codigoRepository.findOneBy({
+      usuarioId: usuario.id,
+    });
+
+    if (codigoDB.fechaExpiracion < new Date()) {
+      throw new BadRequestException('El codigo no ha expirado aun');
+    }
+
     // Crear codigo y almacenarlo en la base de datos
     const codigo = this.codigoRepository.create({
+      ...codigoDB,
       codigo: codigoGenerado,
       tipo: CodigoEnum.CAMBIO_CONTRASENIA,
       usuarioId: usuario.id,

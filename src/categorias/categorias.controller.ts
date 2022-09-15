@@ -24,7 +24,7 @@ import { UpdateCategoriaDto } from './dto/update-categoria.dto';
 export class CategoriasController {
   constructor(private readonly categoriasService: CategoriasService) {}
 
-  @UseGuards(RoleGuard([RoleEnum.EMPLEADO]))
+  @UseGuards(RoleGuard([RoleEnum.EMPLEADO, RoleEnum.ADMINISTRADOR]))
   @UseGuards(AccessTokenGuard)
   @Post()
   create(@Body() createCategoriaDto: CreateCategoriaDto) {
@@ -41,7 +41,7 @@ export class CategoriasController {
     return this.categoriasService.findOne(id);
   }
 
-  @UseGuards(RoleGuard([RoleEnum.EMPLEADO]))
+  @UseGuards(RoleGuard([RoleEnum.EMPLEADO, RoleEnum.ADMINISTRADOR]))
   @UseGuards(AccessTokenGuard)
   @Patch(':id')
   update(
@@ -51,7 +51,7 @@ export class CategoriasController {
     return this.categoriasService.update(id, updateCategoriaDto);
   }
 
-  @UseGuards(RoleGuard([RoleEnum.EMPLEADO]))
+  @UseGuards(RoleGuard([RoleEnum.EMPLEADO, RoleEnum.ADMINISTRADOR]))
   @UseGuards(AccessTokenGuard)
   @Delete(':id')
   remove(@Param('id') id: number) {

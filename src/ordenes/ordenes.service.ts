@@ -30,7 +30,6 @@ export class OrdenesService {
     });
 
     // Evaluar si los productos existen
-
     createOrdeneDto.detalleOrdenes.find((detalle) => {
       const producto = productos.find(
         (producto) => producto.id === detalle.productoId,

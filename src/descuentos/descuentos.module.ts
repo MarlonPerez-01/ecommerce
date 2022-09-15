@@ -6,8 +6,8 @@ import { DescuentosService } from './descuentos.service';
 import { Descuento } from './entities/descuento.entity';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([Descuento])],
   controllers: [DescuentosController],
   providers: [DescuentosService],
-  imports: [TypeOrmModule.forFeature([Descuento])],
 })
 export class DescuentosModule {}

@@ -8,12 +8,14 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { CreateOrdenDto } from './dto/create-orden.dto';
 import { FindOrdenesDto } from './dto/find-ordenes.dto';
 import { UpdateOrdenDto } from './dto/update-orden.dto';
 import { OrdenesService } from './ordenes.service';
 
+@ApiTags('ordenes')
 @Controller('ordenes')
 export class OrdenesController {
   constructor(private readonly ordenesService: OrdenesService) {}

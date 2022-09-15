@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Codigo } from '../codigos/entities/codigo.entity';
 import { EmailsModule } from '../emails/emails.module';
 import { Token } from '../tokens/entities/token.entity';
+import { TokensModule } from '../tokens/tokens.module';
 import { Usuario } from '../usuarios/entities/usuario.entity';
 import { UsuariosService } from '../usuarios/usuarios.service';
 import { AuthController } from './auth.controller';
@@ -16,6 +17,7 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
 
 @Module({
   imports: [
+    TokensModule,
     EmailsModule,
     PassportModule,
     JwtModule.register(null),

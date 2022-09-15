@@ -8,6 +8,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { GetUsuarioActual } from '../auth/decorators/get-usuario-actual.decorator';
 import { AccessTokenGuard } from '../auth/guards/access-token.guard';
@@ -16,6 +17,7 @@ import { CarritoService } from './carrito.service';
 import { AddProductoDto } from './dto/add-producto.dto';
 import { UpdateProductoCarritoDto } from './dto/update-producto-carrito.dto';
 
+@ApiTags('carrito')
 @UseGuards(AccessTokenGuard)
 @Controller('carrito')
 export class CarritoController {

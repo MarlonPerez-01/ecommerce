@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import {
   Column,
   DeleteDateColumn,
@@ -22,6 +23,7 @@ export class Usuario {
   @Column()
   correo: string;
 
+  @Exclude()
   @Column()
   contrasenia: string;
 
