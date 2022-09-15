@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoriasModule } from '../categorias/categorias.module';
 import { Categoria } from '../categorias/entities/categoria.entity';
 import { DetalleCarrito } from '../detalle-carritos/entities/detalle-carrito.entity';
+import { Inventario } from '../inventarios/entities/inventario.entity';
 import { Marca } from '../marcas/entities/marca.entity';
 import { MarcasModule } from '../marcas/marcas.module';
 import { Proveedor } from '../proveedores/entities/proveedor.entity';
@@ -22,6 +23,7 @@ import { ProductosService } from './productos.service';
       Categoria,
       Proveedor,
       DetalleCarrito,
+      Inventario,
     ]),
     MarcasModule,
     CategoriasModule,

@@ -2,8 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { paginate } from '../common/helpers/paginate';
 import { DetallePedido } from '../detalle-pedidos/entities/detalle-pedido.entity';
+import { Inventario } from '../inventarios/entities/inventario.entity';
 import { CreatePedidoDto } from './dto/create-pedido.dto';
+import { FindPedidosDto } from './dto/find-pedidos.dto';
 import { UpdatePedidoDto } from './dto/update-pedido.dto';
 import { Pedido } from './entities/pedido.entity';
 
@@ -11,9 +14,12 @@ import { Pedido } from './entities/pedido.entity';
 export class PedidosService {
   constructor(
     @InjectRepository(Pedido)
-    private readonly pedidoRepository: Repository<Pedido>,
+    private readonly pedidosRepository: Repository<Pedido>,
     @InjectRepository(DetallePedido)
     private readonly detallePedidoRepository: Repository<DetallePedido>,
+
+    @InjectRepository(Inventario)
+    private readonly inventariosRepository: Repository<Inventario>,
   ) {}
 
   async create(createPedidoDto: CreatePedidoDto) {
@@ -21,7 +27,7 @@ export class PedidosService {
       return acc + cur.cantidad * cur.precio;
     }, 0);
 
-    const pedido = this.pedidoRepository.create({
+    const pedido = this.pedidosRepository.create({
       proveedorId: createPedidoDto.proveedorId,
       detallePedidos: createPedidoDto.detallePedidos.map((detalle) => ({
         cantidad: detalle.cantidad,
@@ -31,15 +37,34 @@ export class PedidosService {
       total,
     });
 
-    return this.pedidoRepository.save(pedido);
+    return this.pedidosRepository.save(pedido);
   }
 
-  async findAll() {
-    return `This action returns all pedidos`;
+  async findAll(findPedidosDTO: FindPedidosDto) {
+    const { page, limit, sort, order } = findPedidosDTO;
+
+    const skip = (page - 1) * limit;
+
+    const [data, totalItems] = await this.pedidosRepository.findAndCount({
+      take: limit,
+      skip,
+      order: { [sort]: order },
+    });
+
+    const pagination = paginate(page, limit, totalItems);
+
+    return {
+      data,
+      totalItems,
+      ...pagination,
+    };
   }
 
   async findOne(id: number) {
-    return `This action returns a #${id} pedido`;
+    return this.pedidosRepository.findOne({
+      where: { id },
+      relations: ['detallePedidos', 'detallePedidos.producto'],
+    });
   }
 
   async update(id: number, updatePedidoDto: UpdatePedidoDto) {
@@ -47,6 +72,6 @@ export class PedidosService {
   }
 
   async remove(id: number) {
-    return `This action removes a #${id} pedido`;
+    return this.pedidosRepository.delete(id);
   }
 }

@@ -6,9 +6,11 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 
 import { CreateOrdenDto } from './dto/create-orden.dto';
+import { FindOrdenesDto } from './dto/find-ordenes.dto';
 import { UpdateOrdenDto } from './dto/update-orden.dto';
 import { OrdenesService } from './ordenes.service';
 
@@ -22,8 +24,8 @@ export class OrdenesController {
   }
 
   @Get()
-  findAll() {
-    return this.ordenesService.findAll();
+  findAll(@Query() findOrdenesDTO: FindOrdenesDto) {
+    return this.ordenesService.findAll(findOrdenesDTO);
   }
 
   @Get(':id')

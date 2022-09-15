@@ -2,21 +2,32 @@ import {
   Column,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+
+import { Producto } from '../../productos/entities/producto.entity';
 
 @Entity()
 export class Inventario {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'decimal', precision: 6, scale: 2 })
-  disponible: number;
+  @Column()
+  productoId: number;
 
-  @Column({ type: 'decimal', precision: 6, scale: 2 })
+  @OneToOne(() => Producto, (producto) => producto.inventario)
+  @JoinColumn({ name: 'productoId' })
+  producto: Producto;
+
+  @Column({ default: 0 })
+  cantidad: number;
+
+  @Column({ default: 0 })
   entrante: number;
 
-  @Column({ type: 'decimal', precision: 6, scale: 2 })
+  @Column({ default: 0 })
   estropeado: number;
 
   @DeleteDateColumn({ select: false })

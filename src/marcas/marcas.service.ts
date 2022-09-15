@@ -50,7 +50,7 @@ export class MarcasService {
 
   async findOne(id: number) {
     const marca = await this.marcasRepository.findOneBy({ id });
-    if (!marca) throw new NotFoundException();
+    if (!marca) throw new NotFoundException('Marca no encontrada');
     return marca;
   }
 
@@ -60,13 +60,14 @@ export class MarcasService {
       ...updateMarcaDto,
     });
 
-    if (!marca) throw new NotFoundException();
+    if (!marca) throw new NotFoundException('Marca no encontrada');
 
     return this.marcasRepository.save(marca);
   }
 
   async remove(id: number) {
-    // const marca = await this.findOne(id);
+    const marca = await this.findOne(id);
+    if (!marca) throw new NotFoundException('Marca no encontrada');
     return this.marcasRepository.softDelete(id);
   }
 

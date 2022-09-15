@@ -69,7 +69,7 @@ export class ProveedoresService {
 
   async findOne(id: number) {
     const proveedor = await this.proveedorRepository.findOneBy({ id });
-    if (!proveedor) throw new NotFoundException();
+    if (!proveedor) throw new NotFoundException('Proveedor no encontrado');
     return proveedor;
   }
 
@@ -86,6 +86,7 @@ export class ProveedoresService {
 
   async remove(id: number) {
     const proveedor = await this.findOne(id);
-    return this.proveedorRepository.softDelete(proveedor);
+    if (!proveedor) throw new NotFoundException('Proveedor no encontrado');
+    return this.proveedorRepository.softDelete(id);
   }
 }

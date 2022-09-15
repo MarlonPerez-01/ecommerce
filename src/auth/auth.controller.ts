@@ -52,6 +52,7 @@ export class AuthController {
     return { accessToken, refreshToken: refreshAuthDto.refreshToken };
   }
 
+  // FIXME: se debe eliminar el refresh token específico
   @HttpCode(204)
   @UseGuards(AccessTokenGuard)
   @Post('logout')

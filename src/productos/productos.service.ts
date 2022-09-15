@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 
 import { Categoria } from '../categorias/entities/categoria.entity';
 import { paginate } from '../common/helpers/paginate';
+import { Inventario } from '../inventarios/entities/inventario.entity';
 import { Marca } from '../marcas/entities/marca.entity';
 import { Proveedor } from '../proveedores/entities/proveedor.entity';
 import { CreateProductoDto } from './dto/create-producto.dto';
@@ -19,13 +20,15 @@ import { Producto } from './entities/producto.entity';
 export class ProductosService {
   constructor(
     @InjectRepository(Producto)
-    private readonly productoRepository: Repository<Producto>,
+    private readonly productosRepository: Repository<Producto>,
     @InjectRepository(Marca)
-    private readonly marcaRepository: Repository<Marca>,
+    private readonly marcasRepository: Repository<Marca>,
     @InjectRepository(Categoria)
-    private readonly categoriaRepository: Repository<Categoria>,
+    private readonly categoriasRepository: Repository<Categoria>,
     @InjectRepository(Proveedor)
-    private readonly proveedorRepository: Repository<Proveedor>,
+    private readonly proveedoresRepository: Repository<Proveedor>,
+    @InjectRepository(Inventario)
+    private readonly inventariosRepository: Repository<Inventario>,
   ) {}
 
   async create(createProductoDto: CreateProductoDto) {
@@ -35,7 +38,7 @@ export class ProductosService {
       createProductoDto.categoria,
     );
 
-    const producto = this.productoRepository.create({
+    const producto = this.productosRepository.create({
       nombre: createProductoDto.nombre,
       sku: createProductoDto.sku,
       slug: createProductoDto.slug,
@@ -47,9 +50,10 @@ export class ProductosService {
       }),
       categoria,
       marca,
+      inventario: {},
     });
 
-    return this.productoRepository.save(producto);
+    return this.productosRepository.save(producto);
   }
 
   async findAll(findProductosDTO: FindProductosDTO) {
@@ -57,7 +61,7 @@ export class ProductosService {
 
     const skip = (page - 1) * limit;
 
-    const [data, totalItems] = await this.productoRepository.findAndCount({
+    const [data, totalItems] = await this.productosRepository.findAndCount({
       take: limit,
       skip,
       order: { [sort]: order },
@@ -73,7 +77,7 @@ export class ProductosService {
   }
 
   async findOne(id: number) {
-    const producto = await this.productoRepository.findOne({
+    const producto = await this.productosRepository.findOne({
       where: { id },
       relations: ['marca', 'categoria', 'descuento'],
     });
@@ -93,14 +97,14 @@ export class ProductosService {
 
     const proveedor =
       updateProductoDto.proveedor &&
-      (await this.proveedorRepository.findOneBy({
+      (await this.proveedoresRepository.findOneBy({
         id: updateProductoDto.proveedor,
       }));
 
     if (updateProductoDto.proveedor && !proveedor)
       throw new BadRequestException();
 
-    const producto = await this.productoRepository.preload({
+    const producto = await this.productosRepository.preload({
       id,
       ...updateProductoDto,
       categoria,
@@ -111,29 +115,30 @@ export class ProductosService {
       marca,
     });
 
-    return this.productoRepository.save(producto);
+    return this.productosRepository.save(producto);
   }
 
   async remove(id: number) {
-    // const producto = await this.findOne(id);
-    return this.productoRepository.softDelete(id);
+    const producto = await this.findOne(id);
+    if (!producto) throw new NotFoundException('Producto no encontrado');
+    return this.productosRepository.softDelete(id);
   }
 
   private async preloadMarcaByNombre(nombre: string): Promise<Marca> {
-    const marcaExistente = await this.marcaRepository.findOneBy({ nombre });
+    const marcaExistente = await this.marcasRepository.findOneBy({ nombre });
     if (marcaExistente) {
       return marcaExistente;
     }
-    return this.marcaRepository.create({ nombre });
+    return this.marcasRepository.create({ nombre });
   }
 
   private async preloadCategoriaByNombre(nombre: string): Promise<Categoria> {
-    const categoriaExistente = await this.categoriaRepository.findOneBy({
+    const categoriaExistente = await this.categoriasRepository.findOneBy({
       nombre,
     });
     if (categoriaExistente) {
       return categoriaExistente;
     }
-    return this.categoriaRepository.create({ nombre });
+    return this.categoriasRepository.create({ nombre });
   }
 }

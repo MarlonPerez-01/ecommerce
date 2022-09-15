@@ -37,7 +37,6 @@ export class ProductosController {
     return this.productosService.create(createProductoDto);
   }
 
-  @UseGuards(AccessTokenGuard)
   @Get()
   findAll(@Query() findProductosDTO: FindProductosDTO) {
     return this.productosService.findAll(findProductosDTO);

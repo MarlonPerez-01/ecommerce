@@ -12,6 +12,7 @@ import {
 import { Categoria } from '../../categorias/entities/categoria.entity';
 import { Descuento } from '../../descuentos/entities/descuento.entity';
 import { DetalleCarrito } from '../../detalle-carritos/entities/detalle-carrito.entity';
+import { Inventario } from '../../inventarios/entities/inventario.entity';
 import { Marca } from '../../marcas/entities/marca.entity';
 import { Proveedor } from '../../proveedores/entities/proveedor.entity';
 
@@ -57,8 +58,15 @@ export class Producto {
   @Column('decimal', { precision: 6, scale: 2 })
   precioVenta: number;
 
-  @OneToOne(() => Descuento, (descuento) => descuento.producto)
+  @OneToOne(() => Descuento, (descuento) => descuento.producto, {
+    cascade: ['insert', 'update'],
+  })
   descuento: Descuento;
+
+  @OneToOne(() => Inventario, (inventario) => inventario.producto, {
+    cascade: ['insert', 'update'],
+  })
+  inventario: Inventario;
 
   @Column({ nullable: true })
   descripcion: string;

@@ -1,4 +1,5 @@
 import {
+  Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
@@ -15,6 +16,9 @@ export class Orden {
 
   @OneToMany(() => DetalleOrden, (detalleOrden) => detalleOrden.orden)
   detalleOrdenes: DetalleOrden[];
+
+  @Column({ type: 'decimal', precision: 6, scale: 2 })
+  total: number;
 
   @CreateDateColumn()
   createdAt: Date;
