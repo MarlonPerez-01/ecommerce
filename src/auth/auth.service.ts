@@ -99,7 +99,7 @@ export class AuthService {
       await queryRunner.commitTransaction();
 
       // Enviar correo con codigo de verificacion
-      await this.emailsService.sendAccountConfirmation({
+      await this.emailsService.sendConfirmationEmail({
         to: registerAuthDto.correo,
         nombre: `${registerAuthDto.primerNombre} ${registerAuthDto.primerApellido}`,
         codigo,
@@ -250,7 +250,7 @@ export class AuthService {
       relations: ['role', 'persona'],
     });
 
-    if (!usuario) throw new NotFoundException();
+    if (!usuario) throw new NotFoundException('Usuario no encontrado');
 
     return this.generateAccessToken(usuario);
   }
@@ -287,10 +287,8 @@ export class AuthService {
     return this.codigoRepository.softDelete({ id: codigo.id });
   }
 
+  // TODO: remover codigo duplicado
   async enviarCorreoCambiarContrasenia(correo: string) {
-    // Generar codigo para cambiar contrasenia
-    const codigoGenerado = this.generateCodigo();
-
     // Obtener usuario
     const usuario = await this.usuariosRepository.findOne({
       where: { correo },
@@ -300,27 +298,50 @@ export class AuthService {
     if (!usuario) throw new NotFoundException('Usuario no encontrado');
 
     // Verificar si ya existe un codigo de cambio de contrasenia
-    const codigoDB = await this.codigoRepository.findOneBy({
-      usuarioId: usuario.id,
+    const codigoDB = await this.codigoRepository.findOne({
+      where: { usuarioId: usuario.id, tipo: CodigoEnum.CAMBIO_CONTRASENIA },
+      withDeleted: true,
     });
 
-    if (codigoDB.fechaExpiracion < new Date()) {
+    // Generar codigo para cambiar contrasenia
+    const codigoGenerado = this.generateCodigo();
+
+    if (!codigoDB) {
+      // Crear codigo y almacenarlo en la base de datos
+      await this.codigoRepository.save({
+        codigo: codigoGenerado,
+        tipo: CodigoEnum.CAMBIO_CONTRASENIA,
+        usuarioId: usuario.id,
+        fechaExpiracion: addMinutes(new Date(), 15),
+      });
+
+      // Enviar correo con codigo de verificacion
+      return await this.emailsService.sendChangePassword({
+        to: correo,
+        nombre: `${usuario.persona.primerNombre} ${usuario.persona.primerApellido}`,
+        codigo: codigoGenerado,
+      });
+    }
+
+    // Validar si el codigo ya expiro
+    if (codigoDB && new Date(codigoDB.fechaExpiracion) > new Date()) {
       throw new BadRequestException('El codigo no ha expirado aun');
     }
 
-    // Crear codigo y almacenarlo en la base de datos
+    // Actualizar codigo si ya existe y ha expirado
     const codigo = this.codigoRepository.create({
       ...codigoDB,
       codigo: codigoGenerado,
       tipo: CodigoEnum.CAMBIO_CONTRASENIA,
       usuarioId: usuario.id,
       fechaExpiracion: addMinutes(new Date(), 15),
+      deletedAt: null,
     });
 
     await this.codigoRepository.save(codigo);
 
     // Enviar correo con codigo de verificacion
-    return await this.emailsService.sendAccountConfirmation({
+    return await this.emailsService.sendChangePassword({
       to: correo,
       nombre: `${usuario.persona.primerNombre} ${usuario.persona.primerApellido}`,
       codigo: codigoGenerado,
@@ -341,9 +362,12 @@ export class AuthService {
 
     const hash = await bcrypt.hash(cambiarContraseniaDto.contrasenia, 10);
 
+    await this.codigoRepository.softDelete({ id: codigoVerificacion.id });
+
     return this.usuariosRepository.update(usuario.id, { contrasenia: hash });
   }
 
+  // TODO: remover codigo duplicado
   async resendConfirmationEmail(correo: string) {
     // Obtener usuario
     const usuario = await this.usuariosRepository.findOne({
@@ -359,22 +383,44 @@ export class AuthService {
       withDeleted: true,
     });
 
-    if (!codigo) throw new NotFoundException('Correo no encontrado');
+    // Validar que la cuenta no este verificada
+    if (codigo.deletedAt) {
+      throw new BadRequestException('La cuenta ya ha sido verificada');
+    }
 
-    if (codigo.fechaExpiracion > new Date()) {
+    // Generar nuevo codigo de verificacion
+    const codigoVerificacion = this.generateCodigo();
+
+    if (!codigo) {
+      // Crear codigo y almacenarlo en la base de datos
+      await this.codigoRepository.save({
+        codigo: codigoVerificacion,
+        tipo: CodigoEnum.VERIFICACION,
+        usuarioId: usuario.id,
+        fechaExpiracion: addMinutes(new Date(), 15),
+      });
+
+      // Enviar correo con codigo de verificacion
+      return this.emailsService.sendConfirmationEmail({
+        to: correo,
+        nombre: `${usuario.persona.primerNombre} ${usuario.persona.primerApellido}`,
+        codigo: codigoVerificacion,
+      });
+    }
+
+    // Validar si el codigo ya expiro
+    if (codigo && new Date(codigo.fechaExpiracion) > new Date()) {
       throw new BadRequestException('El codigo no ha expirado aun');
     }
 
-    // Generar nuevo codigo y actualizarlo en la base de datos
-    const codigoVerificacion = this.generateCodigo();
-
+    // Actualizar codigo si ya existe y ha expirado
     await this.codigoRepository.update(codigo.id, {
       codigo: codigoVerificacion,
       fechaExpiracion: addMinutes(new Date(), 15),
     });
 
     // Enviar correo con codigo de verificacion
-    return await this.emailsService.sendAccountConfirmation({
+    return this.emailsService.sendConfirmationEmail({
       to: correo,
       nombre: `${usuario.persona.primerNombre} ${usuario.persona.primerApellido}`,
       codigo: codigoVerificacion,

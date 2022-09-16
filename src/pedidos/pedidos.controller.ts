@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -27,27 +28,36 @@ export class PedidosController {
   constructor(private readonly pedidosService: PedidosService) {}
 
   @Post()
-  create(@Body() createPedidoDto: CreatePedidoDto) {
+  async create(@Body() createPedidoDto: CreatePedidoDto) {
     return this.pedidosService.create(createPedidoDto);
   }
 
   @Get()
-  findAll(@Query() findPedidosDTO: FindPedidosDto) {
+  async findAll(@Query() findPedidosDTO: FindPedidosDto) {
     return this.pedidosService.findAll(findPedidosDTO);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.pedidosService.findOne(id);
+  async findOne(@Param('id') id: number) {
+    const pedido = await this.pedidosService.findOne(id);
+    if (!pedido) throw new NotFoundException('Pedido no encontrado');
+    return pedido;
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() updatePedidoDto: UpdatePedidoDto) {
+  async update(
+    @Param('id') id: number,
+    @Body() updatePedidoDto: UpdatePedidoDto,
+  ) {
+    const pedido = await this.findOne(id);
+    if (!pedido) throw new NotFoundException('Pedido no encontrado');
     return this.pedidosService.update(id, updatePedidoDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number) {
+  async remove(@Param('id') id: number) {
+    const pedido = await this.findOne(id);
+    if (!pedido) throw new NotFoundException('Pedido no encontrado');
     return this.pedidosService.remove(id);
   }
 }

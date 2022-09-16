@@ -11,7 +11,7 @@ interface ConfirmacionCorreo {
 export class EmailsService {
   constructor(private readonly mailerService: MailerService) {}
 
-  async sendAccountConfirmation(confirmacionCorreo: ConfirmacionCorreo) {
+  async sendConfirmationEmail(confirmacionCorreo: ConfirmacionCorreo) {
     return this.mailerService.sendMail({
       to: confirmacionCorreo.to,
       subject: 'Confirmación de correo',
@@ -23,7 +23,7 @@ export class EmailsService {
     });
   }
 
-  async sendCambiarContrasenia(confirmacionCorreo: ConfirmacionCorreo) {
+  async sendChangePassword(confirmacionCorreo: ConfirmacionCorreo) {
     return this.mailerService.sendMail({
       to: confirmacionCorreo.to,
       subject: 'Cambio de contraseña',

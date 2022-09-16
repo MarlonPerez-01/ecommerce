@@ -9,6 +9,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import RoleGuard from 'src/auth/guards/role.guard';
+import { RoleEnum } from 'src/common/enums/role.enum';
 
 import { GetUsuarioActual } from '../auth/decorators/get-usuario-actual.decorator';
 import { AccessTokenGuard } from '../auth/guards/access-token.guard';
@@ -18,6 +20,7 @@ import { AddProductoDto } from './dto/add-producto.dto';
 import { UpdateProductoCarritoDto } from './dto/update-producto-carrito.dto';
 
 @ApiTags('carrito')
+@UseGuards(RoleGuard([RoleEnum.CLIENTE]))
 @UseGuards(AccessTokenGuard)
 @Controller('carrito')
 export class CarritoController {

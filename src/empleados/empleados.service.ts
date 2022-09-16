@@ -109,7 +109,7 @@ export class EmpleadosService {
   }
 
   async remove(id: number) {
-    const eliminado = this.empleadoRepository.softDelete(id);
+    const eliminado = await this.empleadoRepository.softDelete(id);
     if (!eliminado) throw new NotFoundException('Empleado no encontrado');
     return eliminado;
   }

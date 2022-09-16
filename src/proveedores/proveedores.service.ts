@@ -79,7 +79,7 @@ export class ProveedoresService {
       ...updateProveedoreDto,
     });
 
-    if (!proveedor) throw new NotFoundException();
+    if (!proveedor) throw new NotFoundException('Proveedor no encontrado');
 
     return this.proveedorRepository.save(proveedor);
   }

@@ -17,27 +17,30 @@ export class CodigosController {
   constructor(private readonly codigosService: CodigosService) {}
 
   @Post()
-  create(@Body() createCodigoDto: CreateCodigoDto) {
+  async create(@Body() createCodigoDto: CreateCodigoDto) {
     return this.codigosService.create(createCodigoDto);
   }
 
   @Get()
-  findAll() {
+  async findAll() {
     return this.codigosService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.codigosService.findOne(+id);
+  async findOne(@Param('id') id: number) {
+    return this.codigosService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCodigoDto: UpdateCodigoDto) {
-    return this.codigosService.update(+id, updateCodigoDto);
+  async update(
+    @Param('id') id: number,
+    @Body() updateCodigoDto: UpdateCodigoDto,
+  ) {
+    return this.codigosService.update(id, updateCodigoDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.codigosService.remove(+id);
+  async remove(@Param('id') id: number) {
+    return this.codigosService.remove(id);
   }
 }

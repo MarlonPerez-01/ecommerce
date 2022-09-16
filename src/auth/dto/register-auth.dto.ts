@@ -1,4 +1,10 @@
-import { IsEmail, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsNumber,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
 
 export class RegisterAuthDto {
   @IsString()
@@ -19,6 +25,7 @@ export class RegisterAuthDto {
   correo: string;
 
   @IsString()
+  @MinLength(8)
   contrasenia: string;
 
   @IsNumber()

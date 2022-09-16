@@ -21,7 +21,10 @@ export class DepartamentosService {
       relations: ['municipios'],
     });
 
-    if (!departamento) throw new NotFoundException();
+    if (!departamento) {
+      throw new NotFoundException('Departamento no encontrado');
+    }
+
     return departamento;
   }
 }

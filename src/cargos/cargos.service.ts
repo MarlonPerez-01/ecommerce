@@ -23,7 +23,7 @@ export class CargosService {
   }
 
   async findOne(id: number) {
-    const cargo = this.cargoRepository.findOne({ where: { id } });
+    const cargo = await this.cargoRepository.findOneBy({ id });
     if (!cargo) throw new NotFoundException('Cargo no encontrado');
     return cargo;
   }
@@ -35,6 +35,8 @@ export class CargosService {
   }
 
   async remove(id: number) {
+    const cargo = await this.findOne(id);
+    if (!cargo) throw new NotFoundException('Cargo no encontrado');
     return this.cargoRepository.softDelete({ id });
   }
 

@@ -50,7 +50,7 @@ export class CategoriasService {
 
   async findOne(id: number) {
     const categoria = await this.categoriaRepository.findOneBy({ id });
-    if (!categoria) throw new NotFoundException();
+    if (!categoria) throw new NotFoundException('Categoria no encontrada');
     return categoria;
   }
 
@@ -60,7 +60,7 @@ export class CategoriasService {
       ...updateCategoriaDto,
     });
 
-    if (!marca) throw new NotFoundException();
+    if (!marca) throw new NotFoundException('Marca no encontrada');
 
     return this.categoriaRepository.save(marca);
   }

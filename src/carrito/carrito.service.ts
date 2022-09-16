@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -106,7 +110,16 @@ export class CarritoService {
 
     if (!carrito) throw new BadRequestException('El carrito no existe');
 
-    console.log();
+    if (!carrito.detalleCarritos) {
+      throw new BadRequestException('El carrito está vacio');
+    }
+
+    carrito.detalleCarritos.find((detalleCarrito) => {
+      if (detalleCarrito.productoId !== productoId) {
+        throw new NotFoundException('El producto no existe en el carrito');
+      }
+    });
+
     return this.detalleCarritoService.removeByProductoId(productoId, carritoId);
   }
 }

@@ -35,12 +35,12 @@ export class Codigo {
   })
   tipo: CodigoEnum;
 
-  @Column()
+  @Column({ type: 'timestamptz' })
   fechaExpiracion: Date;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
 
-  @DeleteDateColumn()
+  @DeleteDateColumn({ type: 'timestamptz', nullable: true })
   deletedAt: Date;
 }
