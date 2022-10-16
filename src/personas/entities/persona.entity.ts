@@ -33,10 +33,12 @@ export class Persona {
   @Column({ nullable: true })
   foto: string;
 
-  @OneToMany(() => Direccion, (direccion) => direccion.persona)
+  @OneToMany(() => Direccion, (direccion) => direccion.persona, {
+    cascade: ['insert', 'update'],
+  })
   direcciones: Direccion[];
 
-  @OneToOne(() => Cliente, (cliente) => cliente.persona)
+  @OneToOne(() => Cliente, (cliente) => cliente.persona, { cascade: true })
   cliente: Cliente;
 
   @DeleteDateColumn({ select: false })

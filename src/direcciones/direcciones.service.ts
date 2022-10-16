@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -13,8 +13,11 @@ export class DireccionesService {
     private readonly direccionRepository: Repository<Direccion>,
   ) {}
 
-  async create(createDireccionDto: CreateDireccionDto) {
-    const direccion = this.direccionRepository.create(createDireccionDto);
+  async create(personaId: number, createDireccionDto: CreateDireccionDto) {
+    const direccion = this.direccionRepository.create({
+      ...createDireccionDto,
+      personaId,
+    });
     return this.direccionRepository.save(direccion);
   }
 
@@ -26,8 +29,22 @@ export class DireccionesService {
     return this.direccionRepository.findOne({ where: { id } });
   }
 
-  async update(id: number, updateDireccionDto: UpdateDireccionDto) {
-    return `This action updates a #${id} direccione`;
+  async update(
+    personaId: number,
+    direccionId: number,
+    updateDireccionDto: UpdateDireccionDto,
+  ) {
+    const direccion = await this.direccionRepository.findOneBy({
+      id: direccionId,
+      personaId,
+    });
+
+    if (!direccion) throw new NotFoundException('Direccion no encontrada');
+
+    return this.direccionRepository.save({
+      ...direccion,
+      ...updateDireccionDto,
+    });
   }
 
   async remove(id: number) {
